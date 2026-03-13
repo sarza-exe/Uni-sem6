@@ -1,0 +1,196 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+
+\geometry{margin=2.5cm}
+
+\title{Algorytmy Metaheurystyczne\\ Sprawozdanie z Listy 0}
+\author{Sara Żyndul}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Wstęp i opis problemu}
+Problem komiwojażera (ang. \textit{Travelling Salesman Problem}, TSP) to klasyczne zagadnienie optymalizacji kombinatorycznej, polegające na znalezieniu minimalnego cyklu Hamiltona w ważonym grafie pełnym. Oznacza to, że celem jest znalezienie najkrótszej możliwej trasy, która zaczyna się w określonym wierzchołku, odwiedza każdy inny wierzchołek dokładnie jeden raz i wraca do wierzchołka początkowego.
+
+W analizowanych przypadkach zbiór wierzchołków reprezentuje miasta, a kosztem przejścia między nimi jest odległość w przestrzeni euklidesowej (wyznaczana zgodnie ze standardem TSPLIB, czyli zaokrąglana do najbliższej liczby całkowitej). 
+
+
+\section{Metodologia}
+W ramach eksperymentu zbadano pięć zbiorów danych (instancji problemu): \texttt{dj38} (Djibouti), \texttt{qa194} (Quatar), \texttt{uy734} (Uruguay), \texttt{wi29} (Western Sahara) oraz \texttt{zi929} (Zimbabwe).
+
+Eksperyment podzielono na dwie części:
+\begin{enumerate}
+    \item \textbf{Rozwiązania losowe:} Dla każdego zbioru wygenerowano 1000 losowych permutacji wierzchołków, stanowiących pełne cykle komiwojażera. Obliczono:
+    \begin{itemize}
+        \item średnią z wartości minimalnych dla każdej grupy 10 kolejnych losowań (100 grup),
+        \item średnią z wartości minimalnych dla każdej grupy 50 kolejnych losowań (20 grup),
+        \item minimalną długość cyklu dla całego zestawu 1000 losowań.
+    \end{itemize}
+    \item \textbf{Aproksymacja z wykorzystaniem MST:} Zbudowano Minimalne Drzewo Rozpinające przy użyciu algorytmu Prima. Następnie, korzystając z przeszukiwania w głąb (DFS), stworzono cykl Hamiltona poprzez odwiedzanie wierzchołków w kolejności ich pierwszego napotkania (tzw. 2-aproksymacja).
+\end{enumerate}
+
+\section{Wyniki eksperymentalne}
+Zebrane wyniki dla wszystkich zbadanych instancji zestawiono w Tabelach \ref{tab:rand} i \ref{tab:mst}. 
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lrrrrr}
+        \toprule
+        \textbf{Instancja (Zbiór)} & \textbf{Średnia min (10)} & \textbf{Średnia min (50)} & \textbf{Minimum ogółem} \\
+        \midrule
+        \texttt{dj38} (Djibouti) & 24 710.27 & 23 305.70 & 22 128 \\
+        \texttt{wi29} (Western Sahara) & 94 064.66 & 85 499.60 & 73 242 \\
+        \texttt{qa194} (Quatar) & 88 117.43 & 85 829.55 & 81 217\\
+        \texttt{uy734} (Uruguay) & 1 596 613.97 & 1 579 825.85 & 1 551 012 \\
+        \texttt{zi929} (Zimbabwe) & 2 308 209.38 & 2 280 451.65 & 2 251 149 \\
+        \bottomrule
+    \end{tabular}
+    }
+    \caption{Zestawienie wyników z losowych permutacji.}
+    \label{tab:rand}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lrrrrr}
+        \toprule
+        \textbf{Instancja (Zbiór)} & \textbf{Waga MST} & \textbf{Waga cyklu z MST} \\
+        \midrule
+        \texttt{dj38} (Djibouti) & 5 828 & 8 777 \\
+        \texttt{wi29} (Western Sahara) & 21 753 & 33 177 \\
+        \texttt{qa194} (Quatar) & 8 026 & 12 335 \\
+        \texttt{uy734} (Uruguay) & 69 873 & 110 191 \\
+        \texttt{zi929} (Zimbabwe) & 82 863 & 135 526 \\
+        \bottomrule
+    \end{tabular}
+    }
+    \caption{Zestawienie wyników wag na podstawie algorytmu Prima (MST) i przeszukiwania DFS.}
+    \label{tab:mst}
+\end{table}
+
+Jak można zauważyć w wynikach dla próby losowej, zwiększenie rozmiaru grupy (z 10 do 50) każdorazowo skutkowało obniżeniem średniej z minimów. Wynika to z faktu, że w większej puli rośnie prawdopodobieństwo wylosowania lepszego (krótszego) rozwiązania, jednak wciąż są to wartości skrajnie odległe od optimum.
+
+% Miejsce na Twoje wykresy, usuń znak '%' przed liniami poniżej i podmień nazwy plików
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{wykres_dj38.png}
+%     \caption{Wizualizacja cyklu komiwojażera dla instancji dj38.}
+%     \label{fig:dj38}
+% \end{figure}
+
+% Pamiętaj, aby pliki .png znajdowały się w tym samym folderze co plik .tex 
+% (lub w odpowiednim podfolderze, wtedy dodaj ścieżkę, np. plots/dj38MST.png)
+
+\subsection*{Wizualizacje dla instancji dj38 (Djibouti)}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{dj38minRandom.png}
+        \caption{Najlepszy cykl losowy (dj38)}
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{dj38MST.png}
+        \caption{Cykl wygenerowany na bazie MST (dj38)}
+    \end{minipage}
+\end{figure}
+
+\subsection*{Wizualizacje dla instancji wi29 (Western Sahara)}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{wi29minRandom.png}
+        \caption{Najlepszy cykl losowy (wi29)}
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{wi29MST.png}
+        \caption{Cykl wygenerowany na bazie MST (wi29)}
+    \end{minipage}
+\end{figure}
+
+\subsection*{Wizualizacje dla instancji qa194 (Quatar)}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{qa194minRandom.png}
+        \caption{Najlepszy cykl losowy (qa194)}
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{qa194MST.png}
+        \caption{Cykl wygenerowany na bazie MST (qa194)}
+    \end{minipage}
+\end{figure}
+
+\subsection*{Wizualizacje dla instancji uy734 (Uruguay)}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{uy734minRandom.png}
+        \caption{Najlepszy cykl losowy (uy734)}
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{uy734MST.png}
+        \caption{Cykl wygenerowany na bazie MST (uy734)}
+    \end{minipage}
+\end{figure}
+
+\subsection*{Wizualizacje dla instancji zi929 (Zimbabwe)}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{zi929minRandom.png}
+        \caption{Najlepszy cykl losowy (zi929)}
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{zi929MST.png}
+        \caption{Cykl wygenerowany na bazie MST (zi929)}
+    \end{minipage}
+\end{figure}
+
+\section{Analiza teoretyczna i odpowiedzi na pytania}
+
+\subsection{Czy w optymalnej pętli krawędzie mogą się krzyżować?}
+W optymalnym cyklu komiwojażera w przestrzeni euklidesowej \textbf{krawędzie nigdy się nie krzyżują}. Wynika to bezpośrednio z nierówności trójkąta. Jeśli w jakimkolwiek wygenerowanym cyklu dwie krawędzie (np. $A \rightarrow B$ oraz $C \rightarrow D$) ulegają przecięciu, zawsze można je „rozplątać”, łącząc je w sposób niekrzyżujący się (np. $A \rightarrow C$ oraz $B \rightarrow D$). Taka operacja gwarantuje skrócenie całkowitej długości trasy. Z tego powodu na wykresach dróg losowych obserwujemy gąszcz przecinających się linii (wynik bardzo słabej jakości), podczas gdy optymalny cykl ukształtowałby prosty, wielokątny obwód.
+
+\subsection{Dlaczego waga minimalnego drzewa rozpinającego musi być mniejsza od optymalnego cyklu komiwojażera?}
+Każdy prawidłowy cykl komiwojażera dla $n$ wierzchołków posiada dokładnie $n$ krawędzi. Jeśli z optymalnego cyklu komiwojażera usuniemy jedną, dowolną krawędź, otrzymamy ścieżkę Hamiltona, która z definicji jest drzewem rozpinającym dla danego grafu. Koszt tej ścieżki jest o jedną krawędź mniejszy od kosztu optymalnego cyklu. Ponieważ Minimalne Drzewo Rozpinające (MST) jest drzewem rozpinającym o absolutnie \textit{najmniejszym} możliwym koszcie spośród wszystkich drzew w grafie, jego waga siłą rzeczy musi być mniejsza (lub co najwyżej równa) wadze wyżej wymienionej ścieżki Hamiltona. Stąd wynika matematyczna prawidłowość, że:
+$$W(MST) < W(Cykl_{optymalny})$$
+
+\subsection{Analiza cyklu powstałego z MST}
+Zgodnie z instrukcją cykl otrzymany na drodze przeszukiwania w głąb (DFS) na strukturze MST nie powinien być większy niż dwukrotny koszt samego drzewa: $W(Cykl_{MST}) \le 2 \times W(MST)$. Wynika to z faktu, że przechodząc drzewo pełnym spacerem wzdłuż krawędzi "tam i z powrotem", pokonujemy każdą krawędź dwukrotnie. Omijanie węzłów już odwiedzonych (skracanie trasy) dodatkowo zmniejsza ten dystans na mocy nierówności trójkąta.
+Analizując tabelę \ref{tab:mst}:
+\begin{itemize}
+    \item \texttt{dj38}: $8777 \le 2 \times 5828 \ (11656)$
+    \item \texttt{wi29}: $33177 \le 2 \times 21753 \ (43506)$
+    \item \texttt{qa194}: $12335 \le 2 \times 8026 \ (16052)$
+    \item \texttt{uy734}: $110191 \le 2 \times 69873 \ (139746)$
+    \item \texttt{zi929}: $135526 \le 2 \times 82863 \ (165726)$
+\end{itemize}
+Zależność ta została w 100\% potwierdzona we wszystkich eksperymentach, co dowodzi poprawnej implementacji algorytmu 2-aproksymacji.
+
+\section{Podsumowanie}
+Rozwiązania opierające się na generowaniu losowych permutacji całkowicie nie sprawdzają się w Problemie Komiwojażera, szczególnie dla instancji o dużym rozmiarze (np. zbiór z 929 miastami). Uzyskiwane wyniki losowe są wielokrotnie gorsze od rzeczywistego optimum. Zastosowanie prostej, ale dedykowanej metody grafowej – algorytmu Prima do wygenerowania MST, a następnie przeprowadzenie przeszukiwania DFS, drastycznie poprawia jakość trasy i obliczeniowo przebija rozwiązanie losowe pod każdym względem, gwarantując odnalezienie cyklu maksymalnie dwukrotnie dłuższego od optymalnego.
+
+\end{document}

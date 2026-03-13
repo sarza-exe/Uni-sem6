@@ -1,0 +1,12 @@
+**/.venv
+**/venv
+**/.vscode
+**/.git
+**/.idea
+*.aux
+*.o
+*.env
+*.map
+*.log
+*.toc
+*.exe
