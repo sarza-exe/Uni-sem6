@@ -9,7 +9,15 @@ volatile char cmd;
 unsigned long moveStart = 0;
 unsigned long moveTime = 0;
 
-volatile bool moving = false;
+enum movement_enum{
+  NONE = 0,
+  FORWARD = 1,
+  BACKWARD = 2,
+};
+int currentSpeedL = 0;
+int currentSpeedR = 0;
+
+movement_enum movement;
 
 int totalDistance = 0;
 
@@ -38,53 +46,42 @@ void loop() {
       case 'd': w.forwardRight(); break;
       case 'z': w.backLeft(); break;
       case 'c': w.backRight(); break;
-      case 's': w.stop(); break;
-      case '1': w.setSpeedLeft(100); break;
-      case '2': w.setSpeedLeft(200); break;
-      case '9': w.setSpeedRight(100); break;
-      case '0': w.setSpeedRight(200); break;
-      case '5': w.setSpeed(200); break;
-      case 'u': w.goForward(1); break;
-      case 'j': w.goBack(1); break;
-      case 'l': d.draw(10); break;
+      case 's': w.stop(); movement = NONE; d.updateDashboard(0, 0, 0, movement); break;
+      case '1': currentSpeedL = 100; w.setSpeedLeft(100); break;
+      case '2': currentSpeedL = 200; w.setSpeedLeft(200); break;
+      case '9': currentSpeedR = 100; w.setSpeedRight(100); break;
+      case '0': currentSpeedR = 200; w.setSpeedRight(200); break;
+      case '5': currentSpeedL = 200; currentSpeedR = 200; w.setSpeed(200); break;
+      case 'u': forwardNew(10); break;
+      case 'j': backNew(10); break;
       case 'o': forwardNew(25); break;
       case 'p': backNew(25); break;
     }
   }
-  if (moving) {
-
+  if (movement != NONE) {
       unsigned long elapsed = millis() - moveStart;
-      Serial.println(elapsed);
 
       if (elapsed >= moveTime) {
         w.stop();
-        moving = false;
-        d.draw(0);
+        movement = NONE;
+        d.updateDashboard(0, 0, 0, movement);
       } 
       else {
-        int remaining = totalDistance - (elapsed / 50);
-        d.draw(remaining);
+        int remaining = totalDistance - (elapsed / 25);
+        d.updateDashboard(remaining, currentSpeedL, currentSpeedR, movement);
       }
 
     }
 }
-
-
-// void forwardNew(int cm) {
-//   int time = cm*50;
-//   w.forward();
-//   delay(cm*50);
-//   w.stop();
-// }
 
 void forwardNew(int cm) {
   moveTime = cm * 25;      // czas ruchu
   totalDistance = cm;
 
   moveStart = millis();
-  moving = true;
+  movement = FORWARD;
 
-  d.left();
+  d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
   w.forward();
 }
 
@@ -93,7 +90,8 @@ void backNew(int cm) {
   totalDistance = cm;
 
   moveStart = millis();
-  moving = true;
+  movement = BACKWARD;
 
+  d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
   w.back();
 }

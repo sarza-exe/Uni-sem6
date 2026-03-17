@@ -25,10 +25,7 @@ class Display {
     public: 
         Display();
         void init();
-        void draw(int value);
-        void left();
-        void right();
-        void stop();
+        void updateDashboard(int remainingDist, int speedL, int speedR, int movement);
 
     // private: 
     //     int pinsRight[3];
