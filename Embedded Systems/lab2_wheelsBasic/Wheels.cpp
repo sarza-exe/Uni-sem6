@@ -55,7 +55,7 @@ void Wheels::setSpeed(uint8_t s)
 */
 
 void Wheels::attach(int pRF, int pRB, int pRS, int pLF, int pLB, int pLS)
-{ //w.attach(7,8,5,12,11,10);
+{ //w.attach(7,8,5,12,11,6);
     this->attachRight(pRF, pRB, pRS);
     this->attachLeft(pLF, pLB, pLS);
 }
