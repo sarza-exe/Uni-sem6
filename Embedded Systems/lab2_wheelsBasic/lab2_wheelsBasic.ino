@@ -17,6 +17,7 @@ volatile char cmd;
 
 unsigned long moveStart = 0;
 unsigned long moveTime = 0;
+unsigned long moveCount = 0;
 
 unsigned long lastDisplayUpdate = 0;
 const unsigned long displayInterval = 150; // Odświeżaj co 150ms
@@ -37,7 +38,7 @@ void setup() {
   pinMode(BEEPER, OUTPUT);
   Timer1.initialize();
   // put your setup code here, to run once:
-  w.attach(7,8,5,12,11,6);
+  w.attach(8,7,5,11,12,6);
 
   pinMode(INTINPUT0, INPUT);
   pinMode(INTINPUT1, INPUT);
@@ -74,20 +75,24 @@ void loop() {
       case '2': currentSpeedL = 200; w.setSpeedLeft(200); break;
       case '9': currentSpeedR = 100; w.setSpeedRight(100); break;
       case '0': currentSpeedR = 200; w.setSpeedRight(200); break;
-      case '5': currentSpeedL = 200; currentSpeedR = 200; w.setSpeed(200); break;
+      case '5': currentSpeedL = 150; currentSpeedR = 150; w.setSpeed(150); break;
       case 'u': forwardNew(10); break;
       case 'j': backNew(10); break;
       case 'o': forwardNew(25); break;
-      case 'p': backNew(25); break;
+      case 'p': backNew(250); break;
     }
   }
 
   if (movement != NONE) {
     unsigned long elapsed = millis() - moveStart;
+    unsigned long elapsedCnt = cnt0;
+    if(cnt1 > cnt0) elapsedCnt = cnt1;
 
-    if (elapsed >= moveTime) {
+    //if (elapsed >= moveTime) {
+    if (elapsedCnt >= moveCount) {
       w.stop();
       movement = NONE;
+      TimerOff();
       d.updateDashboard(0, 0, 0, movement);
     } 
     else {
@@ -108,8 +113,8 @@ void TimerUpdate() {
 }
 
 void TimerOff(){
-  digitalWrite(BEEPER, LOW);
   Timer1.detachInterrupt();
+  digitalWrite(BEEPER, LOW); 
 }
 
 // zmienia wartość pinu BEEPER
@@ -118,7 +123,9 @@ void doBeep() {
 }
 
 void forwardNew(int cm) {
+  resetCount();
   moveTime = cm * 25;      // czas ruchu
+  moveCount = cm * currentSpeedL / 110;
   totalDistance = cm;
 
   moveStart = millis();
@@ -129,14 +136,24 @@ void forwardNew(int cm) {
 }
 
 void backNew(int cm) {
+  resetCount();
   moveTime = cm * 25;      // czas ruchu
+  moveCount = cm * currentSpeedL / 110;
   totalDistance = cm;
 
   moveStart = millis();
   movement = BACKWARD;
 
+  intPeriod = 6000L * currentSpeedL; 
+  TimerUpdate();
+
   d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
   w.back();
+}
+
+void resetCount(){
+  cnt0 = 0;
+  cnt1 = 0;
 }
 
 void increment() {
