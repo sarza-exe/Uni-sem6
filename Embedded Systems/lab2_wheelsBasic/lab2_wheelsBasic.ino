@@ -9,7 +9,7 @@
 
 long int intPeriod = 500000;
 
-volatile int cnt0, cnt1;
+volatile unsigned long cnt0, cnt1;
 
 Wheels w;
 Display d;
@@ -17,15 +17,19 @@ volatile char cmd;
 
 unsigned long moveStart = 0;
 unsigned long moveTime = 0;
-unsigned long moveCount = 0;
+unsigned long totalMoveCount = 0;
 
 unsigned long lastDisplayUpdate = 0;
 const unsigned long displayInterval = 150; // Odświeżaj co 150ms
+
+// = #szczelin / (3.14*średnica koła np 6.5)
+const float PULSES_PER_CM = 0.98;
 
 enum movement_enum{
   NONE = 0,
   FORWARD = 1,
   BACKWARD = 2,
+  TURN = 3,
 };
 int currentSpeedL = 0;
 int currentSpeedR = 0;
@@ -76,29 +80,33 @@ void loop() {
       case '9': currentSpeedR = 100; w.setSpeedRight(100); break;
       case '0': currentSpeedR = 200; w.setSpeedRight(200); break;
       case '5': currentSpeedL = 150; currentSpeedR = 150; w.setSpeed(150); break;
-      case 'u': forwardNew(10); break;
-      case 'j': backNew(10); break;
-      case 'o': forwardNew(25); break;
-      case 'p': backNew(250); break;
+      case '6': currentSpeedL = 200; currentSpeedR = 200; w.setSpeed(200); break;
+      case 'u': goForward(10); break;
+      case 'j': goBack(10); break;
+      case 'i': goForward(25); break;
+      case 'k': goBack(250); break;
+      case 'y': turnRight(90); break;
+      case 't': turnLeft(90); break;
     }
   }
 
   if (movement != NONE) {
-    unsigned long elapsed = millis() - moveStart;
-    unsigned long elapsedCnt = cnt0;
-    if(cnt1 > cnt0) elapsedCnt = cnt1;
+    //unsigned long elapsed = millis() - moveStart;
+    unsigned long elapsedCnt = (cnt0 > cnt1) ? cnt0 : cnt1;
 
     //if (elapsed >= moveTime) {
-    if (elapsedCnt >= moveCount) {
+    if (elapsedCnt >= totalMoveCount) {
       w.stop();
       movement = NONE;
       TimerOff();
       d.updateDashboard(0, 0, 0, movement);
     } 
     else {
-      // Wywołuj odświeżanie tylko raz na 150ms!
+      // Wywołuj odświeżanie tylko raz na 150ms
       if (millis() - lastDisplayUpdate >= displayInterval) {
-        int remaining = totalDistance - (elapsed / 25);
+        //int remaining = totalDistance - (elapsed / 25);
+        // remaining = totalDistance * (1 - elapsedCnt / totalMoveCount) wspolny mianownik
+        int remaining = (int)(((unsigned long)(totalMoveCount - elapsedCnt) * totalDistance) / totalMoveCount);
         d.updateDashboard(remaining, currentSpeedL, currentSpeedR, movement);
         lastDisplayUpdate = millis();
       }
@@ -106,6 +114,7 @@ void loop() {
   }
 }
 
+// zalacza funkcje bip bip co intPeriod czasu
 // aktualizuje Timer1 aktualną wartością intPeriod
 void TimerUpdate() {
   Timer1.detachInterrupt(); //odłączamy by procesor nie wywoływał starej funkcji
@@ -122,26 +131,27 @@ void doBeep() {
   digitalWrite(BEEPER, digitalRead(BEEPER) ^ 1);
 }
 
-void forwardNew(int cm) {
-  resetCount();
-  moveTime = cm * 25;      // czas ruchu
-  moveCount = cm * currentSpeedL / 110;
+void goForward(int cm) {
+  //moveTime = cm * 25;      // czas ruchu
+  //totalMoveCount = cm * currentSpeedL / 110;
+  totalMoveCount = (unsigned long)(cm * PULSES_PER_CM);
   totalDistance = cm;
 
   moveStart = millis();
+  resetCount();
   movement = FORWARD;
 
   d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
   w.forward();
 }
 
-void backNew(int cm) {
-  resetCount();
-  moveTime = cm * 25;      // czas ruchu
-  moveCount = cm * currentSpeedL / 110;
+void goBack(int cm) {
+  //moveTime = cm * 25;      // czas ruchu
+  totalMoveCount = (unsigned long)(cm * PULSES_PER_CM);
   totalDistance = cm;
 
   moveStart = millis();
+  resetCount();
   movement = BACKWARD;
 
   intPeriod = 6000L * currentSpeedL; 
@@ -149,6 +159,30 @@ void backNew(int cm) {
 
   d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
   w.back();
+}
+
+void turnRight(int degrees){
+  float distanceToTravel = (degrees / 360.0) * (31) // change 31 to PI * odległość między środkami kół
+  totalMoveCount = (unsigned long)(distanceToTravel * PULSES_PER_CM);
+
+  resetCount();
+  movement = FORWARD; //TODO nowy typ TURN
+
+  d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
+  w.forwardLeft();
+  w.backRight();
+}
+
+void turnLeft(int degrees){
+  float distanceToTravel = (degrees / 360.0) * (31) // change 31 to PI * odległość między środkami kół
+  totalMoveCount = (unsigned long)(distanceToTravel * PULSES_PER_CM);
+
+  resetCount();
+  movement = FORWARD; //TODO nowy typ TURN + remainingDegrees in loop
+
+  d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
+  w.backLeft();
+  w.forwardRight();
 }
 
 void resetCount(){
@@ -159,6 +193,12 @@ void resetCount(){
 void increment() {
   if(digitalRead(INTINPUT0))
     cnt0++;
-  else if(digitalRead(INTINPUT1))
+  if(digitalRead(INTINPUT1))
     cnt1++;
 }
+
+/*
+TODO
+check beep beep
+
+*/
