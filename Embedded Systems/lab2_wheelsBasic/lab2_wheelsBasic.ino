@@ -3,6 +3,8 @@
 #include "TimerOne.h"
 #include "PinChangeInterrupt.h"
 
+// NIE BRAC SAMOCHODZIKOW 0 I 2 
+
 #define INTINPUT0 A0
 #define INTINPUT1 A1
 #define BEEPER 13
@@ -23,7 +25,7 @@ unsigned long lastDisplayUpdate = 0;
 const unsigned long displayInterval = 150; // Odświeżaj co 150ms
 
 // = #szczelin / (3.14*średnica koła np 6.5)
-const float PULSES_PER_CM = 0.98;
+const float PULSES_PER_CM = 1.85;
 
 enum movement_enum{
   NONE = 0,
@@ -40,6 +42,11 @@ int totalDistance = 0;
 
 void setup() {
   pinMode(BEEPER, OUTPUT);
+
+  // digitalWrite(BEEPER, HIGH); // Zaświeć wbudowaną diodę L
+  // delay(2000);
+  // digitalWrite(BEEPER, LOW);
+
   Timer1.initialize();
   // put your setup code here, to run once:
   w.attach(8,7,5,11,12,6);
@@ -58,8 +65,12 @@ void setup() {
   Serial.println("Back: ZXC");
   Serial.println("Stop: S");
 
-  d.init();
+  delay(2000);
+  w.setSpeed(175);
+  //turnLeft(180);
+  goForward(100);
 
+  d.init();
 }
 
 void loop() {
@@ -79,12 +90,12 @@ void loop() {
       case '2': currentSpeedL = 200; w.setSpeedLeft(200); break;
       case '9': currentSpeedR = 100; w.setSpeedRight(100); break;
       case '0': currentSpeedR = 200; w.setSpeedRight(200); break;
-      case '5': currentSpeedL = 150; currentSpeedR = 150; w.setSpeed(150); break;
-      case '6': currentSpeedL = 200; currentSpeedR = 200; w.setSpeed(200); break;
+      case '5': currentSpeedL = 175; currentSpeedR = 175; w.setSpeed(175); break;
+      case '6': currentSpeedL = 125; currentSpeedR = 125; w.setSpeed(125); break;
       case 'u': goForward(10); break;
       case 'j': goBack(10); break;
       case 'i': goForward(25); break;
-      case 'k': goBack(250); break;
+      case 'k': goBack(100); break;
       case 'y': turnRight(90); break;
       case 't': turnLeft(90); break;
     }
@@ -154,33 +165,33 @@ void goBack(int cm) {
   resetCount();
   movement = BACKWARD;
 
-  intPeriod = 6000L * currentSpeedL; 
+  intPeriod = 3000L * currentSpeedL; 
   TimerUpdate();
 
   d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
   w.back();
 }
 
-void turnRight(int degrees){
-  float distanceToTravel = (degrees / 360.0) * (31) // change 31 to PI * odległość między środkami kół
+void turnLeft(int degrees){
+  float distanceToTravel = (degrees / 360.0) * (105); // change 31 to PI * odległość między środkami kół
   totalMoveCount = (unsigned long)(distanceToTravel * PULSES_PER_CM);
 
   resetCount();
   movement = FORWARD; //TODO nowy typ TURN
 
-  d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
+  d.updateDashboard(degrees, currentSpeedL, currentSpeedR, movement);
   w.forwardLeft();
   w.backRight();
 }
 
-void turnLeft(int degrees){
-  float distanceToTravel = (degrees / 360.0) * (31) // change 31 to PI * odległość między środkami kół
+void turnRight(int degrees){
+  float distanceToTravel = (degrees / 360.0) * (105); // change 31 to PI * odległość między środkami kół
   totalMoveCount = (unsigned long)(distanceToTravel * PULSES_PER_CM);
 
   resetCount();
   movement = FORWARD; //TODO nowy typ TURN + remainingDegrees in loop
 
-  d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
+  d.updateDashboard(degrees, currentSpeedL, currentSpeedR, movement);
   w.backLeft();
   w.forwardRight();
 }
@@ -196,9 +207,3 @@ void increment() {
   if(digitalRead(INTINPUT1))
     cnt1++;
 }
-
-/*
-TODO
-check beep beep
-
-*/
