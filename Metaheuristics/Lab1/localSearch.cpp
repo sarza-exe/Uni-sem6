@@ -7,9 +7,12 @@
 #include <chrono>
 #include <algorithm>
 #include <climits>
+#include <omp.h>
+#include <atomic>
 
 using namespace std;
-// compile with g++ -std=c++17 -O3 localSearch.cpp -o localSearch
+
+// g++ -std=c++17 -O3 -fopenmp localSearch.cpp -o localSearch.exe
 
 /**
  * param entry is filesystem directory entry of a single .tsp file
@@ -45,13 +48,14 @@ int EUC_2Dnorm(const pair<double, double>& a, const pair<double, double>& b){
 
 /**
  * calculates dist matrix that holds distances between all cities in vector coordinates
+ * stored as a flat matrix (row-major) of size n*n
  */
-vector<vector<int>> createDistanceMatrix(vector<pair<double, double>>& coordinates){
+vector<int> createDistanceMatrix(vector<pair<double, double>>& coordinates){
     int n = coordinates.size();
-    vector<vector<int>> dist(n, vector<int>(n));
+    vector<int> dist(n * n);
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
-            dist[i][j] = EUC_2Dnorm(coordinates[i], coordinates[j]);
+            dist[i * n + j] = EUC_2Dnorm(coordinates[i], coordinates[j]);
         }
     }
     return dist;
@@ -69,30 +73,24 @@ vector<int> randomPermutation(int n){
     return perm;
 }
 
-long long calculateCost(const vector<vector<int>>& distMatrix, const vector<int>& perm){
+/**
+ * calculates cost of a tour given by perm using distMatrix (flat, row-major n*n)
+ */
+long long calculateCost(const vector<int>& distMatrix, const vector<int>& perm){
     long long cost = 0;
     const int n = perm.size();
     for(int i = 0; i < n-1; i++)
-        cost += distMatrix[perm[i]][perm[i+1]];
-    cost += distMatrix[perm[n-1]][perm[0]];
+        cost += distMatrix[perm[i] * n + perm[i+1]];
+    cost += distMatrix[perm[n-1] * n + perm[0]];
     return cost;
 }
 
-long long getInvertDelta(const vector<vector<int>>& dist, const vector<int>& perm, int i, int j) {
-    int n = perm.size();
-    if (i == 0 && j == n - 1) return 0; // full reversal = same tour
-
-    int prev_i = (i - 1 + n) % n;
-    int next_j = (j + 1) % n;
-
-    return -dist[perm[prev_i]][perm[i]] - dist[perm[j]][perm[next_j]]
-           + dist[perm[prev_i]][perm[j]] + dist[perm[i]][perm[next_j]];
-}
-
-// local search przyjmuje początkowy cykl (losowy albo z mst)
-// zwraca koszt uzyskanego rozwiązania i liczbę kroków poprawy a także rozwiązanie (permutacje)
-// solution to roziwiązanie początkowe a po wykonaniu algorytmu - końcowe
-pair<long long, int> localSearch(const vector<vector<int>>& distMatrix, vector<int>& solution){
+/**
+ * runs local search with invert neighborhood on the given solution and distance matrix
+ * returns the cost of the final solution and the number of improvement steps taken
+ * modifies the solution vector in place to represent the final tour
+ */
+pair<long long, int> localSearch(const vector<int>& distMatrix, vector<int>& solution){
     //1. Wyznacz wartość funkcji celu wszystkich sąsiadów rozwiązania aktualnego (dla otoczenia invert)
     //Jako kandydata do poprawy wybierz najlepszego z ocenionych sąsiadów.
     //jeśli kandydat nie jest lepszy od aktualnego rozwiązania, to zakończ algorytm
@@ -100,29 +98,40 @@ pair<long long, int> localSearch(const vector<vector<int>>& distMatrix, vector<i
     int noSteps = 0;
     long long currCost = calculateCost(distMatrix, solution);
     const int n = solution.size();
+
     for(;; noSteps++){
         long long bestDelta = 0;
         int newI = -1; int newJ = -1;
-        for(int i = 0; i < n; i++){
-            for(int j = i+1; j < n; j++){
-                long long delta = getInvertDelta(distMatrix, solution, i, j);
-                if(delta < bestDelta) {
+
+        for (int i = 0; i < n; i++) { // maybe get the first negative delta instead of the best one to speed up?
+            int idx_prev_i = ((i - 1 + n) % n);
+            int node_prev_i = solution[idx_prev_i];
+            int node_i = solution[i];
+
+            for (int j = i + 1; j < n; j++) {
+                if (i == 0 && j == n - 1) continue; // full reversal = same tour
+                int next_j = (j + 1) % n;
+                int node_j = solution[j];
+                int node_next_j = solution[next_j];
+
+                long long delta = -distMatrix[node_prev_i * n + node_i] 
+                                  - distMatrix[node_j * n + node_next_j]
+                                  + distMatrix[node_prev_i * n + node_j] 
+                                  + distMatrix[node_i * n + node_next_j];
+
+                if (delta < bestDelta) {
                     bestDelta = delta;
                     newI = i; newJ = j;
                 }
             }
         }
+
         if(bestDelta >= 0) break;
-        if(newI < 0) break; // safety guard
         currCost += bestDelta;
-        cout << bestDelta << " at cost " << currCost << "\n";
         reverse(solution.begin() + newI, solution.begin() + newJ + 1);
-        if(noSteps > n * 10) break; // safety stop in case
     }
     return {currCost,noSteps};
 }
-
-
 
 
 int main(){
@@ -132,63 +141,73 @@ int main(){
         vector<pair<double, double>> coordinates;
         readFile(entry, coordinates);
         if(coordinates.empty()) continue;
-        if(entry.path() != "data/dj38.tsp") continue;
+        if(entry.path() == "data/ca4663.tsp") continue;
         int n = coordinates.size();
 
-        vector<vector<int>> dist = createDistanceMatrix(coordinates);
+        vector<int> dist = createDistanceMatrix(coordinates);
 
-        auto perm = randomPermutation(n);
-        auto [costF, stepF] = localSearch(dist, perm);
-        cout<<"best new cost is "<<costF<<" after " << stepF << "steps\n";
-        
-        // // For full local search
-        // vector<long long> costsFull;
-        // vector<int> stepsFull;
-        // long long bestCostFull = LLONG_MAX;
-        
-        // // For random local search
-        // vector<long long> costsRandom;
-        // vector<int> stepsRandom;
-        // long long bestCostRandom = LLONG_MAX;
-        
-        // for(int run = 0; run < n; ++run){
-        //     auto perm = randomPermutation(n);
-            
-        //     // // Full
-        //     // auto [costF, stepF] = localSearchFull(dist, perm);
-        //     // costsFull.push_back(costF);
-        //     // stepsFull.push_back(stepF);
-        //     // if(costF < bestCostFull) bestCostFull = costF;
-            
-        //     // // Random
-        //     // perm = randomPermutation(n); // new random start
-        //     // auto [costR, stepR] = localSearchRandom(dist, perm);
-        //     // costsRandom.push_back(costR);
-        //     // stepsRandom.push_back(stepR);
-        //     // if(costR < bestCostRandom) bestCostRandom = costR;
-        // }
-        
-        // // Calculate averages
-        // double avgCostFull = 0, avgStepsFull = 0;
-        // for(auto c : costsFull) avgCostFull += c;
-        // for(auto s : stepsFull) avgStepsFull += s;
-        // avgCostFull /= n;
-        // avgStepsFull /= n;
-        
-        // double avgCostRandom = 0, avgStepsRandom = 0;
-        // for(auto c : costsRandom) avgCostRandom += c;
-        // for(auto s : stepsRandom) avgStepsRandom += s;
-        // avgCostRandom /= n;
-        // avgStepsRandom /= n;
-    
-        // cout << "Full Local Search:\n";
-        // cout << "  Avg Cost: " << avgCostFull << "\n";
-        // cout << "  Avg Steps: " << avgStepsFull << "\n";
-        // cout << "  Best Cost: " << bestCostFull << "\n";
-        // cout << "Random Local Search:\n";
-        // cout << "  Avg Cost: " << avgCostRandom << "\n";
-        // cout << "  Avg Steps: " << avgStepsRandom << "\n";
-        // cout << "  Best Cost: " << bestCostRandom << "\n\n";
+        // Local Search
+        vector<long long> costs;
+        vector<int> steps;
+        long long bestCost = LLONG_MAX;
+        vector<int> bestPerm(n);
+
+        #pragma omp parallel num_threads(8)
+        {
+            vector<long long> localCosts;
+            vector<int> localSteps;
+            long long localBestCost = LLONG_MAX;
+            vector<int> localBestPerm(n);
+            int no_runs = ceil(sqrt(n));
+            if(entry.path() == "data/eg7146.tsp") no_runs = 4;
+            if(entry.path() == "data/ei8246.tsp") no_runs = 4;
+            if(entry.path() == "data/tz6117.tsp") no_runs = 8;
+
+            //#pragma omp for nowait
+            #pragma omp for schedule(dynamic) nowait
+            for (int i = 0; i < no_runs; ++i) {
+                auto perm = randomPermutation(n);
+                auto [costR, stepR] = localSearch(dist, perm);
+                localCosts.push_back(costR);
+                localSteps.push_back(stepR);
+                if (costR < localBestCost) {
+                    localBestCost = costR;
+                    localBestPerm = perm;
+                }
+                #pragma omp critical(logging)
+                {
+                    cout << "Run " << i+1 << "/" << no_runs << " done (Thread " << omp_get_thread_num() << ")\n";
+                }
+            }
+
+            #pragma omp critical
+            {
+                costs.insert(costs.end(), localCosts.begin(), localCosts.end());
+                steps.insert(steps.end(), localSteps.begin(), localSteps.end());
+                if (localBestCost < bestCost) {
+                    bestCost = localBestCost;
+                    bestPerm = localBestPerm;
+                }
+            }
+        }
+
+        long long avgCost = reduce(costs.begin(), costs.end(), 0LL) / costs.size();
+        double avgSteps = static_cast<double>(reduce(steps.begin(), steps.end(), 0)) / steps.size();
+
+        cout << "File: " << entry.path().filename() << "\n";
+
+        cout << "Local Search \n";
+        cout << "Average Cost: " << avgCost << "\n";
+        cout << "Average Steps: " << avgSteps << "\n";
+        //for data file .sol
+        string solFilename = "dataSol/" + entry.path().stem().string() + "localSearch.sol";
+        ofstream solFile(solFilename);
+        if(solFile.is_open()){
+            solFile << bestCost << "\n";
+            for(auto c : bestPerm) solFile << coordinates[c].first << " " << coordinates[c].second << "\n";
+            solFile.close();
+        }
+        else cerr <<"Error opening file for writing: " << solFilename << "\n";
     }
     return 0;
 }

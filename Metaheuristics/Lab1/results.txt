@@ -1,0 +1,49 @@
+File: "dj38.tsp"
+Local Search
+Average Cost: 6956
+Average Steps: 34
+
+File: "ca4663.tsp"
+Local Search
+Average Cost: 1428915
+Average Steps: 6776.38
+
+File: "eg7146.tsp"
+Local Search
+Average Cost: 189901
+Average Steps: 10263.5
+
+File: "ei8246.tsp"
+Local Search
+Average Cost: 229971
+Average Steps: 12008
+
+File: "mu1979.tsp"
+Local Search
+Average Cost: 94045
+Average Steps: 2793.87
+
+File: "qa194.tsp"
+Local Search
+Average Cost: 10223
+Average Steps: 210.857
+
+File: "tz6117.tsp"
+Local Search
+Average Cost: 436651
+Average Steps: 8881.88
+
+File: "uy734.tsp"
+Local Search
+Average Cost: 86921
+Average Steps: 924.286
+
+File: "wi29.tsp"
+Local Search
+Average Cost: 28256
+Average Steps: 25
+
+File: "zi929.tsp"
+Local Search
+Average Cost: 104190
+Average Steps: 1176.06
