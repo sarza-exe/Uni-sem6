@@ -87,6 +87,59 @@ long long calculateCost(const vector<int>& distMatrix, const vector<int>& perm){
     return cost;
 }
 
-void primMst(const vector<int>& distMatrix, int n, vector<vector<int>>& tree){
-    // np. tree[0] = [1, 5] means city 0 is connected with cities 1 and 5
+
+long long primMst(const vector<int>& distMatrix, int n, vector<vector<int>>& tree) {
+    tree.assign(n, vector<int>()); // Reinitialize the tree to ensure it's empty and correctly sized
+
+    vector<bool> inTree(n, false);
+    vector<int> minDist(n, numeric_limits<int>::max());
+    vector<int> parent(n, -1);
+
+    minDist[0] = 0;
+    long long weight = 0;
+
+    for (int step = 0; step < n; ++step) {
+        int bestDist = numeric_limits<int>::max();
+        int u = -1;
+        
+        for (int i = 0; i < n; ++i) { // Find vertex with min distance from the tree
+            if (!inTree[i] && minDist[i] < bestDist) {
+                bestDist = minDist[i];
+                u = i;
+            }
+        }
+
+        inTree[u] = true; // Add u to the tree
+
+        // If not the first node, add edge to the tree
+        if (parent[u] != -1) {
+            tree[u].push_back(parent[u]);
+            tree[parent[u]].push_back(u);
+            weight += bestDist;
+        }
+
+        // Update min_dist for all vertices not in the tree
+        for (int v = 0; v < n; ++v) {
+            if (!inTree[v]) {
+                int dist = distMatrix[u * n + v];
+                
+                if (dist < minDist[v]) {
+                    minDist[v] = dist;
+                    parent[v] = u;
+                }
+            }
+        }
+    }
+
+    return weight;
+}
+
+void DFS(int start, const vector<vector<int>>& tree, vector<bool>& visited, vector<int>& tour) {
+    visited[start] = true;
+    tour.push_back(start);
+    for (int neighbor : tree[start]) {
+        if (!visited[neighbor]) {
+            DFS(neighbor, tree, visited, tour);
+        }
+    }
 }

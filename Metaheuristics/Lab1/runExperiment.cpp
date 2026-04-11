@@ -8,6 +8,7 @@
 #include <climits>
 #include <omp.h>
 #include <functional>
+#include <random>
 
 #include "utils.hpp"
 #include "localSearch.hpp"
@@ -21,8 +22,11 @@ using SearchAlgorithm = std::function<pair<long long, int>(const vector<int>&, v
 int main(){
     namespace fs = std::filesystem;
 
-    SearchAlgorithm searchAlgorithm = localSearchFast; 
-    string algorithmName = "LocalSearchFast";
+    // SETUP
+    SearchAlgorithm searchAlgorithm = localSearch; 
+    string algorithmName = "MSTLocalSearch";
+    bool useMST = true;
+    vector<vector<int>> tree;
 
     for(const auto& entry : fs::directory_iterator("data/")){
         vector<pair<double, double>> coordinates;
@@ -39,6 +43,16 @@ int main(){
         long long bestCost = LLONG_MAX;
         vector<int> bestPerm(n);
 
+        if(useMST){
+            long long mstCost = primMst(dist, n, tree);
+            std::cout << "MST Cost: " << mstCost << "\n";
+        }
+        
+        //for mst
+        std::random_device rd;  // a seed source for the random number engine
+        std::mt19937 gen(rd()); // mersenne_twister_engine seeded with rd()
+        std::uniform_int_distribution<> distrib(0, n-1);
+
         #pragma omp parallel num_threads(8) // similar to 20 threads but can kinda use the computer while running
         {
             vector<long long> localCosts;
@@ -48,14 +62,24 @@ int main(){
             int no_runs = ceil(sqrt(n));
 
             // only for full local search
-            //if(entry.path() == "data/eg7146.tsp") no_runs = 8;
-            //if(entry.path() == "data/ei8246.tsp") no_runs = 8;
-            //if(entry.path() == "data/tz6117.tsp") no_runs = 8;
+            if(entry.path() == "data/eg7146.tsp") no_runs = 8;
+            if(entry.path() == "data/ei8246.tsp") no_runs = 8;
+            if(entry.path() == "data/tz6117.tsp") no_runs = 8;
 
             //#pragma omp for nowait
             #pragma omp for schedule(dynamic) nowait
             for (int i = 0; i < no_runs; ++i) {
-                auto perm = randomPermutation(n);
+
+                vector<int> perm;
+                if(useMST){
+                    int startNode = distrib(gen);
+                    auto visited = vector<bool>(n, false);
+                    DFS(startNode, tree, visited, perm);
+                }
+                else {
+                    perm = randomPermutation(n);
+                }
+
                 auto [costR, stepR] = searchAlgorithm(dist, perm);
                 localCosts.push_back(costR);
                 localSteps.push_back(stepR);
@@ -65,7 +89,7 @@ int main(){
                 }
                 #pragma omp critical(logging)
                 {
-                    cout << i+1 << "/" << no_runs << "  ";
+                    std::cout << i+1 << "/" << no_runs << "  ";
                 }
             }
 
@@ -83,11 +107,11 @@ int main(){
         long long avgCost = reduce(costs.begin(), costs.end(), 0LL) / costs.size();
         double avgSteps = static_cast<double>(reduce(steps.begin(), steps.end(), 0)) / steps.size();
 
-        cout << "File: " << entry.path().filename() << "\n";
+        std::cout << "File: " << entry.path().filename() << "\n";
 
-        cout << "Local Search \n";
-        cout << "Average Cost: " << avgCost << "\n";
-        cout << "Average Steps: " << avgSteps << "\n";
+        std::cout << "Local Search \n";
+        std::cout << "Average Cost: " << avgCost << "\n";
+        std::cout << "Average Steps: " << avgSteps << "\n";
         //for data file .sol
         string solFilename = "dataSol/" + entry.path().stem().string() + algorithmName + ".sol";
         ofstream solFile(solFilename);
