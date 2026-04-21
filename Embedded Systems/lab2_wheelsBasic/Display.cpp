@@ -2,7 +2,7 @@
 #include <LiquidCrystal_I2C.h>
 #include "Display.h"
 
-byte LCDAddress = 0x3F; //0x27
+byte LCDAddress = 0x27; //0x27
 LiquidCrystal_I2C lcd(LCDAddress, 16, 2);
 
 // Definicje własnych znaków
