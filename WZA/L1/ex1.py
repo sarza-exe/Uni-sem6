@@ -37,7 +37,7 @@ def div_rem(a, b):
 def nwd(a, b):
     """Oblicza NWD za pomocą algorytmu Euklidesa"""
     while not (b.re == 0 and b.im == 0):
-        q, r = div_rem(a, b)
+        _, r = div_rem(a, b)
         a = b
         b = r
     return a
@@ -48,7 +48,7 @@ def nwd_list(lst):
     return reduce(nwd, lst)
 
 def nww(a, b):
-    # nww(a,b) = (a*b)/nwd(a,b) (dzielenie dokładne)
+    # nww(a,b) = (a*b)/nwd(a,b)
     gcd = nwd(a, b)
     if gcd.re == 0 and gcd.im == 0:
         return GaussInt(0, 0)
@@ -65,7 +65,7 @@ def nww_list(lst):
 # abcdef
 ab = GaussInt(2, 7)
 print(f"N(2 + 7i) = {ab.norm()}")
-#pc  aq  pd  bqi przez e  f i. 
+
 im2 = GaussInt(2 + 9, 6 + 7)
 im3 = GaussInt(8, 6)
 q, r = div_rem(im2, im3) # im2 = qim3+r
