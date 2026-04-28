@@ -55,3 +55,24 @@ void Display::updateDashboard(int remainingDist, int speedL, int speedR, int mov
     lcd.print(speedR);
     lcd.print("  ");
 }
+
+void Display::serwoDisplay(int angle, int distance) {
+    // line 1
+    lcd.setCursor(0, 0);
+    lcd.print("Dist: ");
+    lcd.print(distance);
+    lcd.print(" cm    "); // Spacje czyszczą pozostałości po dłuższych liczbach
+
+    // line 2
+    // left wheels (Speed L)
+    lcd.setCursor(0, 1);
+    lcd.print("Angle:");
+    lcd.print("    "); // Czyści resztki
+
+    lcd.setCursor(8, 1);
+    lcd.setCursor(7, 1);
+    lcd.print(angle);
+    lcd.print(" st");
+
+    lcd.print("    ");
+}

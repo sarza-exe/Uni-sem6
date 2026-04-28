@@ -26,6 +26,7 @@ class Display {
         Display();
         void init();
         void updateDashboard(int remainingDist, int speedL, int speedR, int movement);
+        void serwoDisplay(int angle, int distance);
 
     // private: 
     //     int pinsRight[3];

@@ -22,17 +22,24 @@
 // pin pilota IR
 #define IR_RECEIVE_PIN 3 
 
-//kody komend do pilota (nie mozna uzywac 0x98 (GetCommandFromIR))
+//kody komend do pilota
 #define IR_UP 24
 #define IR_DOWN 82
 #define IR_LEFT 8
 #define IR_RIGHT 90
 #define IR_ONE 69
+#define IR_TWO 70
+#define IR_THREE 71
 #define IR_STAR 22
+#define IR_ERR 1 // nothing
+
+uint32_t lastCommand = IR_ERR;
 
 // pin kontroli serwo (musi być PWM)
 #define SERVO 9
 Servo serwo;
+
+int serwoAngle = 90;
 
 long int intPeriod = 500000;
 
@@ -50,6 +57,8 @@ unsigned long lastDisplayUpdate = 0;
 unsigned long lastSonarCheck = 0;
 const unsigned long displayInterval = 150; // Odświeżaj co 150ms
 const unsigned long sonarInterval = 200; // Odświeżaj co 50ms
+
+unsigned long lastManualCommandTime = 0;
 
 
 // = #szczelin / (3.14*średnica koła np 6.5)
@@ -76,6 +85,9 @@ enum scan_state{
   SCAN_DECIDE = 3,
 };
 
+enum op_mode { MODE_NONE, MODE_AUTO, MODE_MANUAL };
+op_mode currentOpMode = MODE_NONE;
+
 scan_state scanPhase = SCAN_START;
 unsigned long scanTimer = 0;
 int distLeft = 0;
@@ -92,10 +104,10 @@ int totalDistance = 0;
 
 /*
 TODO
+add IR_TWO IR_THREE
 2 przyciski
 "2" to porusza się jak wcześniej
-"3" to porusza się jak się przytrzyma
-strzałki działąją i jak strzałka w przód + wjechanie w ściane to się zatrzyma
+"3" to porusza się jak się przytrzyma strzałki; strzałki działąją i jak strzałka w przód + wjechanie w ściane to się zatrzyma
 */
 
 void setup() {
@@ -104,7 +116,7 @@ void setup() {
   pinMode(TRIG, OUTPUT);    // TRIG startuje sonar
   pinMode(ECHO, INPUT);     // ECHO odbiera powracający impuls
   serwo.attach(SERVO);
-  serwo.write(90);
+  serwoWrite(90);
 
   pinMode(BEEPER, OUTPUT);
 
@@ -127,101 +139,60 @@ void setup() {
   Serial.println("Back: ZXC");
   Serial.println("Stop: S");
 
-  // delay(2000); w.setSpeed(175); turnLeft(180); goForward(100);
-
   d.init();
 
-  Serial.println("NO");
-  GetCommandFromIR(69);
-  GetCommandFromIR(22);
-  Serial.println("Y$ES");
+  GetCommandFromIR(IR_ONE);
+  GetCommandFromIR(IR_STAR);
+  Serial.println("CAR UNLOCKED");
 
-  SetState(MOVE); //STAY or MOVE
+  SetState(STAY); //STAY or MOVE
 }
 
 void loop() {
-  while(Serial.available())
-  {
-    cmd = Serial.read();
-    switch(cmd)
-    {
-      case 'w': w.forward(); break;
-      case 'x': w.back(); intPeriod = 50000*currentSpeedL; /*TimerUpdate();*/ break;
-      case 'a': w.forwardLeft(); break;
-      case 'd': w.forwardRight(); break;
-      case 'z': w.backLeft(); break;
-      case 'c': w.backRight(); break;
-      case 's': w.stop(); movement = NONE; d.updateDashboard(0, 0, 0, movement);//TimerOff(); break;
-      case '1': currentSpeedL = 100; w.setSpeedLeft(100); break;
-      case '2': currentSpeedL = 200; w.setSpeedLeft(200); break;
-      case '9': currentSpeedR = 100; w.setSpeedRight(100); break;
-      case '0': currentSpeedR = 200; w.setSpeedRight(200); break;
-      case '5': currentSpeedL = 175; currentSpeedR = 175; w.setSpeed(175); break;
-      case '6': currentSpeedL = 125; currentSpeedR = 125; w.setSpeed(125); break;
-      case 'u': goForward(10); break;
-      case 'j': goBack(10); break;
-      case 'i': goForward(25); break;
-      case 'k': goBack(100); break;
-      case 'y': turnRight(90); break;
-      case 't': turnLeft(90); break;
-      case '3': serwo.write(45); break;
-      case '4': serwo.write(135); break;
-    }
+  performSerialRead();
+
+  uint32_t irCmd = ReadCommandFromIR();
+
+  //d.serwoDisplay(serwoAngle, GetSonarDistance());
+  if (millis() - lastDisplayUpdate >= displayInterval) {
+    d.serwoDisplay(serwoAngle, GetSonarDistance());
+    lastDisplayUpdate = millis();
   }
 
-  if (movement != NONE) {
-    //unsigned long elapsed = millis() - moveStart;
-    unsigned long elapsedCnt = (cnt0 > cnt1) ? cnt0 : cnt1;
+  // Tryby
+  if (irCmd == IR_TWO) {
+    w.setSpeed(175);
+    SetState(MOVE);
+    currentOpMode = MODE_AUTO;
+    Serial.println("Tryb: AUTO");
+  } 
+  else if (irCmd == IR_THREE) {
+    serwoWrite(90);
+    w.setSpeed(175);
+    currentOpMode = MODE_MANUAL;
+    w.stop(); // Zatrzymaj się przy zmianie trybu
+    Serial.println("Tryb: MANUAL");
+  }
+  else if(irCmd == IR_STAR){
+    currentOpMode = MODE_NONE;
+    w.stop();
+    Serial.println("Tryb: STOP");
+  }
 
-    //if (elapsed >= moveTime) {
-    if (elapsedCnt >= totalMoveCount) {
-      w.stop();
-      movement = NONE;
-      //TimerOff();
-      d.updateDashboard(0, 0, 0, movement);
-    } 
-    else {
-      // Wywołuj odświeżanie tylko raz na 150ms
-      if (millis() - lastDisplayUpdate >= displayInterval) {
-        //int remaining = totalDistance - (elapsed / 25);
-        // remaining = totalDistance * (1 - elapsedCnt / totalMoveCount) wspolny mianownik
-        int remaining = (int)(((unsigned long)(totalMoveCount - elapsedCnt) * totalDistance) / totalMoveCount);
-        d.updateDashboard(remaining, currentSpeedL, currentSpeedR, movement);
-        lastDisplayUpdate = millis();
-      }
-    }
+  // Wykonaj logikę zależną od trybu
+  if (currentOpMode == MODE_AUTO) {
+    updateMovement();
+    handleAutomaticMode(); // logika z sonarem i skanowaniem
+  } 
+  else if (currentOpMode == MODE_MANUAL) {
+    handleManualMode(irCmd); // funkcja sterowania strzałkami
   }
   
-  // Jeśli jedziemy, sprawdzaj odległość
-  if(carState == MOVE) {
-    if(millis() - lastSonarCheck >= sonarInterval) {
-      lastSonarCheck = millis();
-      unsigned int sonarCheck = GetSonarDistance();
-      
-      if(sonarCheck > 0 && sonarCheck <= 40) { // Dodałem > 0, bo HC-SR04 czasem zwraca 0 przy błędzie
-        SetState(SCAN); // Przeszkoda. Zatrzymaj się i skanuj
-      }
-    }
-  }
-  
-  // Jeśli jesteśmy w trybie skanowania, wywołuj funkcję radaru
-  if(carState == SCAN) {
-    PerformScan();
-  }
-
-  // Jeśli autko skończyło skręcać, ruszaj znowu przed siebie
-  if(carState == TURN_WAIT) {
-    // Kiedy turnLeft/turnRight zliczy impulsy z kół, ustawia movement = NONE. 
-    // To dla nas sygnał, że skręt zakończony!
-    if(movement == NONE) {
-      SetState(MOVE); 
-    }
-  }
 }
 
 
 void GetCommandFromIR(uint32_t command){
-  uint32_t commandReceived = 98;
+  uint32_t commandReceived = IR_ERR;
   while(true){
     if (IrReceiver.decode()) {
       if (IrReceiver.decodedIRData.decodedRawData != 0) {
@@ -241,117 +212,56 @@ void GetCommandFromIR(uint32_t command){
 }
 
 
+// uint32_t ReadCommandFromIR(){
+//   uint32_t command = IR_ERR;
+//   if (IrReceiver.decode()) {
+//     if (IrReceiver.decodedIRData.decodedRawData != 0) {
+//       Serial.print("Odebrano kod przycisku: 0x");
+//       command = IrReceiver.decodedIRData.command;
+//       Serial.println(command);
+//     }
+//     // Wznów nasłuchiwanie, aby odebrać kolejny sygnał
+//     IrReceiver.resume(); 
+//     return command;
+//   }
+//   return IR_ERR;
+// }
+
+uint32_t ReadCommandFromIR() {
+  if (IrReceiver.decode()) {
+    uint32_t cmd = IrReceiver.decodedIRData.command;
+    
+    // Jeśli to kod powtórzenia, zwróć ostatnią zapamiętaną komendę
+    if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
+        IrReceiver.resume();
+        return lastCommand; 
+    }
+
+    Serial.print("IRcommand: ");
+    Serial.println(cmd);
+    
+    IrReceiver.resume();
+    lastCommand = cmd;
+    return cmd;
+  }
+  return IR_ERR;
+}
+
+
 
 unsigned int GetSonarDistance(){
   unsigned long tot;      // czas powrotu (time-of-travel)
   unsigned int distance;
   
-/* uruchamia sonar (puls 10 ms na `TRIGGER')
- * oczekuje na powrotny sygnał i aktualizuje
- */
+// uruchamia sonar (puls 10 ms na `TRIGGER') oczekuje na powrotny sygnał aktualizuje
   digitalWrite(TRIG, HIGH);
   delayMicroseconds(12); //microseconds
   digitalWrite(TRIG, LOW);
   tot = pulseIn(ECHO, HIGH);
 
-/* prędkość dźwięku = 340m/s => 1 cm w 29 mikrosekund
- * droga tam i z powrotem, zatem:
- */
+// prędkość dźwięku = 340m/s => 1 cm w 29 mikrosekund droga tam i z powrotem zatem:
   distance = tot/58;
   return distance;
-}
-
-
-
-
-void SetState(car_state newState){
-  if(carState == newState) return; 
-
-  if(newState == MOVE){
-    serwo.write(90);
-    carState = MOVE;
-    movement = NONE; 
-    w.setSpeed(150); 
-    w.forward();
-  }
-  else if(newState == SCAN){
-    carState = SCAN;
-    w.stop(); 
-    movement = NONE; 
-    scanPhase = SCAN_START; 
-    d.updateDashboard(0, 0, 0, movement);
-  }
-  else if(newState == TURN_WAIT){
-    carState = TURN_WAIT;
-    // Nie wywołujemy w.stop(), bo turnLeft/turnRight same zarządzają silnikami
-  }
-  else if(newState == STAY){
-    carState = STAY;
-    w.setSpeed(0);
-    movement = NONE;
-  }
-}
-
-
-
-
-void PerformScan() {
-  switch (scanPhase) {
-    
-    case SCAN_START:
-      serwo.write(160); // Patrz w lewo (160 stopni)
-      scanTimer = millis();
-      scanPhase = SCAN_WAIT_LEFT; // Przejdź do następnego kroku
-      break;
-
-    case SCAN_WAIT_LEFT:
-      if (millis() - scanTimer >= 350) { // Czekamy 350ms na ruch serwa
-        distLeft = GetSonarDistance();
-        Serial.print("Lewo: "); Serial.println(distLeft);
-        
-        serwo.write(20); // Patrz w prawo (20 stopni)
-        scanTimer = millis();
-        scanPhase = SCAN_WAIT_RIGHT;
-      }
-      break;
-
-    case SCAN_WAIT_RIGHT:
-      if (millis() - scanTimer >= 400) { // Czekamy 400ms (dłuższy ruch przez cały przód)
-        distRight = GetSonarDistance();
-        Serial.print("Prawo: "); Serial.println(distRight);
-        
-        serwo.write(90); // Wróć na środek
-        scanTimer = millis();
-        scanPhase = SCAN_DECIDE;
-      }
-      break;
-
-    case SCAN_DECIDE:
-      if (millis() - scanTimer >= 300) { // Czekamy aż głowa wróci na środek
-        // decyzja
-        if (distLeft > distRight) {
-          Serial.println("Decyzja: Skret w LEWO");
-          w.setSpeed(200);
-          turnLeft(90); 
-        } else {
-          Serial.println("Decyzja: Skret w PRAWO");
-          w.setSpeed(200);
-          turnRight(90);
-        }
-        
-        movement = TURN;
-        scanPhase = SCAN_START; // Resetujemy maszynę skanującą na przyszłość
-        SetState(TURN_WAIT);    // Zmieniamy stan auta - teraz czeka na koniec obrotu!
-      }
-      break;
-  }
-}
-
-
-
-// zmienia wartość pinu BEEPER
-void doBeep() {
-  digitalWrite(BEEPER, digitalRead(BEEPER) ^ 1);
 }
 
 
@@ -363,10 +273,11 @@ void turnLeft(int degrees){
   resetCount();
   movement = FORWARD; //TODO nowy typ TURN
 
-  d.updateDashboard(degrees, currentSpeedL, currentSpeedR, movement);
+  //d.updateDashboard(degrees, currentSpeedL, currentSpeedR, movement);
   w.forwardLeft();
   w.backRight();
 }
+
 
 void turnRight(int degrees){
   float distanceToTravel = (degrees / 360.0) * (105); // change 31 to PI * odległość między środkami kół
@@ -375,10 +286,11 @@ void turnRight(int degrees){
   resetCount();
   movement = FORWARD; //TODO nowy typ TURN + remainingDegrees in loop
 
-  d.updateDashboard(degrees, currentSpeedL, currentSpeedR, movement);
+  //d.updateDashboard(degrees, currentSpeedL, currentSpeedR, movement);
   w.backLeft();
   w.forwardRight();
 }
+
 
 void resetCount(){
   cnt0 = 0;
@@ -392,6 +304,11 @@ void increment() {
     cnt1++;
 }
 
+
+int serwoWrite(int angle){
+  serwoAngle = angle;
+  serwo.write(angle);
+}
 
 
 
@@ -428,4 +345,10 @@ void goBack(int cm) {
 
   d.updateDashboard(cm, currentSpeedL, currentSpeedR, movement);
   w.back();
+}
+
+
+// zmienia wartość pinu BEEPER
+void doBeep() {
+  digitalWrite(BEEPER, digitalRead(BEEPER) ^ 1);
 }
