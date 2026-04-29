@@ -1,0 +1,82 @@
+Simulated annealing
+
+"data/ca4663.tsp"
+Initial temperature: 20537.9
+Simulated Annealing
+Average Cost: 2366702
+Best Cost: 2307877
+"data/mu1979.tsp"
+Initial temperature: 1496.81
+Simulated Annealing
+Average Cost: 109610
+Best Cost: 107032
+"data/zi929.tsp"
+Initial temperature: 1772.65
+Simulated Annealing
+Average Cost: 107190
+Best Cost: 104637
+"data/qa194.tsp"
+Initial temperature: 316.915
+Simulated Annealing
+Average Cost: 9648
+Best Cost: 9435
+"data/dj38.tsp"
+Initial temperature: 414.12
+Simulated Annealing
+Average Cost: 6658
+Best Cost: 6656
+"data/wi29.tsp"
+Initial temperature: 2874.94
+Simulated Annealing
+Average Cost: 27696
+Best Cost: 27603
+"data/eg7146.tsp"
+Initial temperature: 1125.41
+Simulated Annealing
+Average Cost: 291099
+Best Cost: 284179
+"data/uy734.tsp"
+Initial temperature: 1389.62
+Simulated Annealing
+Average Cost: 85179
+Best Cost: 83663
+"data/ei8246.tsp"
+Initial temperature: 1036.83
+Simulated Annealing
+Average Cost: 358791
+Best Cost: 356902
+"data/tz6117.tsp"
+Initial temperature: 3289.2
+Simulated Annealing
+Average Cost: 673427
+Best Cost: 667569
+
+plots
+
+├── ca4663Annealing.png
+
+├── ca4663Tabu.png
+
+├── dj38Annealing.png
+
+├── dj38Tabu.png
+
+├── eg7146Annealing.png
+
+├── ei8246Annealing.png
+
+├── mu1979Annealing.png
+
+├── qa194Annealing.png
+
+├── qa194Tabu.png
+
+├── tz6117Annealing.png
+
+├── uy734Annealing.png
+
+├── wi29Annealing.png
+
+├── zi929Annealing.png
+
+└── zi929Tabu.png

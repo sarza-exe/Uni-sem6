@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include <filesystem>
@@ -30,7 +31,7 @@ int main(){
         vector<pair<double, double>> coordinates;
         readFile(entry, coordinates);
         if(coordinates.empty()) continue;
-        //if(entry.path() != "data/zi929.tsp") continue;
+        if(entry.path() != "data/zi929.tsp") continue;
         int n = coordinates.size();
 
         vector<int> dist = createDistanceMatrix(coordinates);
@@ -45,8 +46,8 @@ int main(){
         std::mt19937 gen(rd()); // mersenne_twister_engine seeded with rd()
         std::uniform_int_distribution<> distrib(0, n-1);
 
-        double initialTemp = getInitialTemperature(dist);
-        cout<< "Initial temperature: " << initialTemp << "\n";
+        // double initialTemp = getInitialTemperature(dist);
+        // cout<< "Initial temperature: " << initialTemp << "\n";
 
         #pragma omp parallel num_threads(8) // similar to 20 threads but can kinda use the computer while running
         {
@@ -93,8 +94,9 @@ int main(){
 
         std::cout << "File: " << entry.path().filename() << "\n";
 
-        std::cout << "Local Search \n";
+        std::cout << "Tabu Search \n";
         std::cout << "Average Cost: " << avgCost << "\n";
+        std::cout << "Best Cost: " << bestCost << "\n";
         //for data file .sol
         string solFilename = "dataSol/" + entry.path().stem().string() + algorithmName + ".sol";
         ofstream solFile(solFilename);
