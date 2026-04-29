@@ -11,7 +11,7 @@
 #include <random>
 
 #include "utils.hpp"
-#include "annealing.hpp"
+#include "tspSolvers.hpp"
 
 using namespace std;
 
@@ -24,7 +24,7 @@ int main(){
 
     // SETUP
     SearchAlgorithm searchAlgorithm = annealing; 
-    string algorithmName = "Annealing";
+    string algorithmName = "Tabu";
 
     for(const auto& entry : fs::directory_iterator("data/")){
         vector<pair<double, double>> coordinates;
@@ -67,7 +67,7 @@ int main(){
                 vector<int> perm;
                 perm = randomPermutation(n);
 
-                long long costR = searchAlgorithm(dist, perm, initialTemp, 0.995, 1000, 10*n);
+                long long costR = tabuSearch(dist, perm, n, 500, 2); //searchAlgorithm(dist, perm, initialTemp, 0.995, 1000, 10*n);
                 localCosts.push_back(costR);
                 if (costR < localBestCost) {
                     localBestCost = costR;

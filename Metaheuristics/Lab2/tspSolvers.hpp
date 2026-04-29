@@ -78,31 +78,41 @@ long long annealing(const vector<int>& distMatrix, vector<int>& solution, double
 
 
 /**
- * runs local search with invert n random neighbors on the given solution and distance matrix
- * returns the cost of the final solution and the number of improvement steps taken
- * modifies the solution vector in place to represent the final tour
- */
-pair<long long, int> localSearchFast(const vector<int>& distMatrix, vector<int>& solution){
-    //1. Wyznacz wartość funkcji celu wszystkich sąsiadów rozwiązania aktualnego (dla otoczenia invert)
-    //Jako kandydata do poprawy wybierz najlepszego z ocenionych sąsiadów.
-    //jeśli kandydat nie jest lepszy od aktualnego rozwiązania, to zakończ algorytm
-    //Zastąp aktualne rozwiązanie kandydatem i przejdź do kroku 1
-    int noSteps = 0;
-    long long currCost = calculateCost(distMatrix, solution);
-    const int n = solution.size();
+ * runs tabu search on the given solution and distance matrix
+ * @param distMatrix The flat (row-major) distance matrix of the TSP instance
+ * @param solution The initial tour (will be modified in place)
+ * @param tabuLength The length of the tabu (number of iterations a move remains tabu)
+ * @param maxIterWithoutImprovement The maximum number of iterations without improvement
+ * @param neighborhoodSize The number of random neighbors to consider in each iteration (multiplier for n)
+ * @return The cost of the final solution
 
-    mt19937 mt{};
+ */
+long long tabuSearch(const vector<int>& distMatrix, vector<int>& solution, const int tabuLength = 500, const int maxIterWithoutImprovement = 500, const int neighborhoodSize = 10) {
+    long long currCost = calculateCost(distMatrix, solution);
+    long long globalBestCost = currCost;
+    vector<int> bestSolution = solution;
+
+    const int n = solution.size();
+    long long iter = 0;
+    int iterWithoutImprovement = 0;
+
+    random_device rd;
+    mt19937 mt{rd()};
     uniform_int_distribution randN{0, n-1};
 
-    for(;; noSteps++){
-        long long bestDelta = 0;
-        int newI = -1; int newJ = -1;
+    vector<int> tabuList(n * n, 0); 
 
-        for (int k = 0; k < n; k++) {
+    while(iterWithoutImprovement < maxIterWithoutImprovement) {
+        iter++;
+        long long bestDelta = LLONG_MAX; // Inicjalizujemy nieskończonościa
+        int newI = -1; 
+        int newJ = -1;
+
+        for (int k = 0; k < neighborhoodSize * n; k++) {
             int i = randN(mt);
             int j = randN(mt);
-            if(i == j || (i == 0 && j == n - 1)) continue;
             if(i > j) swap(i,j);
+            if(i == j || (i == 0 && j == n - 1)) continue;
 
             int idx_prev_i = ((i - 1 + n) % n);
             int node_prev_i = solution[idx_prev_i];
@@ -112,19 +122,57 @@ pair<long long, int> localSearchFast(const vector<int>& distMatrix, vector<int>&
             int node_next_j = solution[next_j];
 
             long long delta = -distMatrix[node_prev_i * n + node_i] 
-                                - distMatrix[node_j * n + node_next_j]
-                                + distMatrix[node_prev_i * n + node_j] 
-                                + distMatrix[node_i * n + node_next_j];
+                              - distMatrix[node_j * n + node_next_j]
+                              + distMatrix[node_prev_i * n + node_j] 
+                              + distMatrix[node_i * n + node_next_j];
 
-            if (delta < bestDelta) {
+            // Sprawdzamy czy nowe krawędzie które chcemy dodać są zablokowane na liście Tabu
+            // Używamy || (OR), bo jeśli choć jedna połówka ruchu jest zablokowana, cały ruch jest podejrzany
+            bool isTabu = (tabuList[node_prev_i * n + node_j] > iter) || 
+                          (tabuList[node_i * n + node_next_j] > iter);
+
+            // Kryterium Aspiracji (Ignorujemy Tabu, jeśli bijemy globalny rekord)
+            if (isTabu && (currCost + delta < globalBestCost)) {
+                isTabu = false;
+            }
+
+            if (!isTabu && delta < bestDelta) {
                 bestDelta = delta;
-                newI = i; newJ = j;
+                newI = i; 
+                newJ = j;
             }
         }
 
-        if(bestDelta >= 0) break;
-        currCost += bestDelta;
+        // Zabezpieczenie gdyby przez zbieg okoliczności nie znaleziono żadnego ruchu
+        if (newI == -1) break;
+
+        // Wyciągamy wierzchołki starych krawędzi (zrywanych)
+        int broken_node_prev_i = solution[((newI - 1 + n) % n)];
+        int broken_node_i = solution[newI];
+        int broken_node_j = solution[newJ];
+        int broken_node_next_j = solution[(newJ + 1) % n];
+
+        // aplikujemy invert
         std::reverse(solution.begin() + newI, solution.begin() + newJ + 1);
+        currCost += bestDelta;
+
+        // czy pobiliśmy globalne optimum? jeśli tak aktualizujemy rekord i resetujemy licznik iteracji bez poprawy
+        if (currCost < globalBestCost) {
+            globalBestCost = currCost;
+            bestSolution = solution; // Zapisujemy nowy rekord
+            iterWithoutImprovement = 0;
+        } else {
+            iterWithoutImprovement++;
+        }
+
+        // Zapisujemy zrywane krawędzie jako TABU
+        tabuList[broken_node_prev_i * n + broken_node_i] = iter + tabuLength;
+        tabuList[broken_node_i * n + broken_node_prev_i] = iter + tabuLength;
+        
+        tabuList[broken_node_j * n + broken_node_next_j] = iter + tabuLength;
+        tabuList[broken_node_next_j * n + broken_node_j] = iter + tabuLength;
     }
-    return {currCost,noSteps};
+
+    solution = bestSolution;
+    return globalBestCost;
 }
