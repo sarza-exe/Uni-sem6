@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <filesystem>
@@ -31,7 +30,7 @@ int main(){
         vector<pair<double, double>> coordinates;
         readFile(entry, coordinates);
         if(coordinates.empty()) continue;
-        if(entry.path() != "data/zi929.tsp") continue;
+        //if(entry.path() != "data/zi929.tsp") continue;
         int n = coordinates.size();
 
         vector<int> dist = createDistanceMatrix(coordinates);

@@ -15,6 +15,8 @@
 #include "tspSolvers.hpp" 
 // Przyjmuje (distMatrix, solution, tabuLength, maxIterWithoutImprovement, neighborsToCheck)
 
+// g++ -std=c++17 -O3 -fopenmp gridSearchTabu.cpp -o tabu
+
 using namespace std;
 
 int main() {
