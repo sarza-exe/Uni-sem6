@@ -51,6 +51,7 @@ class Wheels {
          *      może zależeć od stanu naładowania baterii
          */
         void setSpeed(uint8_t);
+        void setSpeed(uint8_t, uint8_t);
         void setSpeedRight(uint8_t);
         void setSpeedLeft(uint8_t);
 

@@ -16,6 +16,7 @@ void performSerialRead(){
       case '2': currentSpeedL = 200; w.setSpeedLeft(200); break;
       case '9': currentSpeedR = 100; w.setSpeedRight(100); break;
       case '0': currentSpeedR = 200; w.setSpeedRight(200); break;
+      case '7': w.setSpeed(0, 180); break;
       case '5': currentSpeedL = 175; currentSpeedR = 175; w.setSpeed(175); break;
       case '6': currentSpeedL = 125; currentSpeedR = 125; w.setSpeed(125); break;
       case 'u': goForward(10); break;

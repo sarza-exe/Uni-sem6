@@ -83,3 +83,53 @@ void handleManualMode(uint32_t cmd) {
     }
   }
 }
+
+
+
+
+
+void handleSpringMode() {
+  const int targetDist = 45; // Punkt równowagi (cm)
+  const float k = 4.0; // Współczynnik sprężystości (do dostosowania)
+  const int deadzone = 3; // Tolerancja błędu (żeby auto nie drgało przy 100cm)
+
+  int currentDist = GetSonarDistance();
+
+  // Ignorujemy błędy sonaru (0 lub zbyt duże wartości)
+  if (currentDist <= 0 || currentDist > 120) {
+    w.setSpeed(150);
+    w.back();
+    return;
+  }
+
+  int x = currentDist - targetDist; // Obliczamy "rozciągnięcie" sprężyny (x)
+
+  // czy jesteśmy w punkcie równowagi
+  if (abs(x) <= deadzone) {
+    w.stop();
+    movement = NONE;
+  } 
+  else {
+    // Obliczamy prędkość na podstawie siły sprężyny (F = k * x) Mapujemy wynik na zakres PWM (0-255)
+    int speed = abs(x) * k;
+    
+    // Ograniczamy prędkość do zakresu obsługiwanego przez silniki
+    if (speed > 255) speed = 255;
+    if (speed < 100)  speed = 100; // Minimalna moc, by ruszyć silniki
+
+    w.setSpeed(speed);
+
+    if (x > 0) {
+      // Przeszkoda daleko
+      w.forward();
+      movement = FORWARD;
+    } 
+    else {
+      // Przeszkoda za blisko
+      Serial.println("ZA BLISKO");
+      w.back();
+      movement = BACKWARD;
+    }
+  }
+}
+

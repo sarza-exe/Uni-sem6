@@ -46,6 +46,12 @@ void Wheels::setSpeed(uint8_t s)
     setSpeedRight(s);
 }
 
+void Wheels::setSpeed(uint8_t sL, uint8_t sR)
+{
+    setSpeedLeft(sL);
+    setSpeedRight(sR);
+}
+
 /*
   fioletowy lewy przód
   szary lewy tył

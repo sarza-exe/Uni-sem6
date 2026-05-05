@@ -41,6 +41,11 @@ Servo serwo;
 
 int serwoAngle = 90;
 
+int sweepAngle = 90;// Aktualny kąt serwa
+int sweepStep = 10; // O ile stopni przesunąć serwo w jednym kroku
+unsigned long lastSweepTime = 0;
+const int sweepInterval = 200; // Jak szybko "machać" sonarem (ms)
+
 long int intPeriod = 500000;
 
 volatile unsigned long cnt0, cnt1;
@@ -85,7 +90,7 @@ enum scan_state{
   SCAN_DECIDE = 3,
 };
 
-enum op_mode { MODE_NONE, MODE_AUTO, MODE_MANUAL };
+enum op_mode { MODE_NONE, MODE_AUTO, MODE_MANUAL, MODE_SPRING };
 op_mode currentOpMode = MODE_NONE;
 
 scan_state scanPhase = SCAN_START;
@@ -102,13 +107,6 @@ car_state carState = 0;
 
 int totalDistance = 0;
 
-/*
-TODO
-add IR_TWO IR_THREE
-2 przyciski
-"2" to porusza się jak wcześniej
-"3" to porusza się jak się przytrzyma strzałki; strzałki działąją i jak strzałka w przód + wjechanie w ściane to się zatrzyma
-*/
 
 void setup() {
   Serial.begin(9600);
@@ -160,18 +158,25 @@ void loop() {
   }
 
   // Tryby
-  if (irCmd == IR_TWO) {
+  if (irCmd == IR_ONE) {
     w.setSpeed(175);
     SetState(MOVE);
     currentOpMode = MODE_AUTO;
     Serial.println("Tryb: AUTO");
   } 
-  else if (irCmd == IR_THREE) {
+  else if (irCmd == IR_TWO) {
     serwoWrite(90);
     w.setSpeed(175);
     currentOpMode = MODE_MANUAL;
     w.stop(); // Zatrzymaj się przy zmianie trybu
     Serial.println("Tryb: MANUAL");
+  }
+  else if(irCmd == IR_THREE){
+    serwoWrite(90);
+    w.setSpeed(150);
+    currentOpMode = MODE_SPRING;
+    w.stop();
+    Serial.println("Tryb: OBSTACLE");
   }
   else if(irCmd == IR_STAR){
     currentOpMode = MODE_NONE;
@@ -186,6 +191,10 @@ void loop() {
   } 
   else if (currentOpMode == MODE_MANUAL) {
     handleManualMode(irCmd); // funkcja sterowania strzałkami
+  }
+  else if (currentOpMode == MODE_SPRING){
+    //updateMovement();
+    handleSpringMode(); //handleObstacleMode();
   }
   
 }
@@ -212,20 +221,6 @@ void GetCommandFromIR(uint32_t command){
 }
 
 
-// uint32_t ReadCommandFromIR(){
-//   uint32_t command = IR_ERR;
-//   if (IrReceiver.decode()) {
-//     if (IrReceiver.decodedIRData.decodedRawData != 0) {
-//       Serial.print("Odebrano kod przycisku: 0x");
-//       command = IrReceiver.decodedIRData.command;
-//       Serial.println(command);
-//     }
-//     // Wznów nasłuchiwanie, aby odebrać kolejny sygnał
-//     IrReceiver.resume(); 
-//     return command;
-//   }
-//   return IR_ERR;
-// }
 
 uint32_t ReadCommandFromIR() {
   if (IrReceiver.decode()) {
