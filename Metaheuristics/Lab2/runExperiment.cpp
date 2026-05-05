@@ -31,6 +31,10 @@ int main(){
         readFile(entry, coordinates);
         if(coordinates.empty()) continue;
         //if(entry.path() != "data/zi929.tsp") continue;
+        if(entry.path() == "data/ca4663.tsp") continue;
+        if(entry.path() == "data/eg7146.tsp") continue;
+        if(entry.path() == "data/ei8246.tsp") continue;
+        if(entry.path() == "data/tz6117.tsp") continue;
         int n = coordinates.size();
 
         vector<int> dist = createDistanceMatrix(coordinates);

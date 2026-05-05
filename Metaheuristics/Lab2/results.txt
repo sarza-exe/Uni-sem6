@@ -51,32 +51,46 @@ Simulated Annealing
 Average Cost: 673427
 Best Cost: 667569
 
-plots
 
-├── ca4663Annealing.png
+Tabu Search
 
-├── ca4663Tabu.png
-
-├── dj38Annealing.png
-
-├── dj38Tabu.png
-
-├── eg7146Annealing.png
-
-├── ei8246Annealing.png
-
-├── mu1979Annealing.png
-
-├── qa194Annealing.png
-
-├── qa194Tabu.png
-
-├── tz6117Annealing.png
-
-├── uy734Annealing.png
-
-├── wi29Annealing.png
-
-├── zi929Annealing.png
-
-└── zi929Tabu.png
+"data/ca4663.tsp"
+Tabu Search 
+Average Cost: 1586062
+Best Cost: 1539866
+"data/mu1979.tsp"
+Tabu Search 
+Average Cost: 103733
+Best Cost: 100647
+"data/zi929.tsp"
+Tabu Search 
+Average Cost: 109434
+Best Cost: 105978
+"data/qa194.tsp"
+Tabu Search 
+Average Cost: 10738
+Best Cost: 10211
+"data/dj38.tsp"
+Tabu Search 
+Average Cost: 7264
+Best Cost: 6693
+"data/wi29.tsp"
+Tabu Search 
+Average Cost: 29324
+Best Cost: 27895
+"data/eg7146.tsp"
+Tabu Search 
+Average Cost: 209246
+Best Cost: 203745
+"data/uy734.tsp"
+Tabu Search 
+Average Cost: 96056
+Best Cost: 92385
+"data/ei8246.tsp"
+Tabu Search 
+Average Cost: 262256
+Best Cost: 260433
+"data/tz6117.tsp"
+Tabu Search 
+Average Cost: 484855
+Best Cost: 478633
