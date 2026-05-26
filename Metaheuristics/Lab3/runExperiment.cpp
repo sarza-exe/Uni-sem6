@@ -24,14 +24,18 @@ int main(){
 
     // --- KONFIGURACJA EKSPERYMENTU ---
     // Możesz łatwo zmienić na PMX i "Genetic_PMX", aby zebrać dane do drugiej części sprawozdania
-    CrossoverType crossType = OX; 
-    string algorithmName = "Genetic_OX"; 
+    CrossoverType crossType = PMX; //OX
+    string algorithmName = "Genetic_PMX"; 
 
     for(const auto& entry : fs::directory_iterator("data/")){
         vector<pair<double, double>> coordinates;
         readFile(entry, coordinates);
         if(coordinates.empty()) continue;
-        if(entry.path() != "data/uy734.tsp") continue; 
+        if(entry.path() == "data/ca4663.tsp") continue; 
+        if(entry.path() == "data/eg7146.tsp") continue; 
+        if(entry.path() == "data/ei8246.tsp") continue; 
+        if(entry.path() == "data/tz6117.tsp") continue; 
+        if(entry.path() == "data/mu1979.tsp") continue; 
         
         int n = coordinates.size();
         vector<int> dist = createDistanceMatrix(coordinates);

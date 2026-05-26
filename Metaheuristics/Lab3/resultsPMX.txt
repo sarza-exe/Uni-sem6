@@ -1,0 +1,555 @@
+"data/ca4663.tsp"
+"data/dj38.tsp"
+==================================================
+File: "dj38.tsp" (Vertices: 38)
+Running Genetic_PMX with 100 iterations...
+  Iteracja 1/100 | Cost: 6656 | Time: 32 ms
+  Iteracja 2/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 3/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 4/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 5/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 6/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 7/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 8/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 9/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 10/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 11/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 12/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 13/100 | Cost: 6656 | Time: 28 ms
+  Iteracja 14/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 15/100 | Cost: 6656 | Time: 27 ms
+  Iteracja 16/100 | Cost: 6656 | Time: 27 ms
+  Iteracja 17/100 | Cost: 6656 | Time: 28 ms
+  Iteracja 18/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 19/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 20/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 21/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 22/100 | Cost: 6656 | Time: 27 ms
+  Iteracja 23/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 24/100 | Cost: 6656 | Time: 28 ms
+  Iteracja 25/100 | Cost: 6656 | Time: 27 ms
+  Iteracja 26/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 27/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 28/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 29/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 30/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 31/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 32/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 33/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 34/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 35/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 36/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 37/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 38/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 39/100 | Cost: 6656 | Time: 27 ms
+  Iteracja 40/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 41/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 42/100 | Cost: 6656 | Time: 28 ms
+  Iteracja 43/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 44/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 45/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 46/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 47/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 48/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 49/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 50/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 51/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 52/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 53/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 54/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 55/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 56/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 57/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 58/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 59/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 60/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 61/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 62/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 63/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 64/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 65/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 66/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 67/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 68/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 69/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 70/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 71/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 72/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 73/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 74/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 75/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 76/100 | Cost: 6656 | Time: 27 ms
+  Iteracja 77/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 78/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 79/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 80/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 81/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 82/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 83/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 84/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 85/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 86/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 87/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 88/100 | Cost: 6656 | Time: 24 ms
+  Iteracja 89/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 90/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 91/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 92/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 93/100 | Cost: 6656 | Time: 27 ms
+  Iteracja 94/100 | Cost: 6656 | Time: 27 ms
+  Iteracja 95/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 96/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 97/100 | Cost: 6656 | Time: 27 ms
+  Iteracja 98/100 | Cost: 6656 | Time: 25 ms
+  Iteracja 99/100 | Cost: 6656 | Time: 26 ms
+  Iteracja 100/100 | Cost: 6656 | Time: 24 ms
+
+Podsumowanie dla "dj38.tsp":
+  Algorytm:     Genetic_PMX
+  Average Cost: 6656
+  Best Cost:    6656
+  Saved best solution to: dataSol/dj38Genetic_PMX.sol
+"data/eg7146.tsp"
+"data/ei8246.tsp"
+"data/mu1979.tsp"
+"data/qa194.tsp"
+==================================================
+File: "qa194.tsp" (Vertices: 194)
+Running Genetic_PMX with 100 iterations...
+  Iteracja 1/100 | Cost: 9390 | Time: 866 ms
+  Iteracja 2/100 | Cost: 9434 | Time: 1602 ms
+  Iteracja 3/100 | Cost: 9504 | Time: 3310 ms
+  Iteracja 4/100 | Cost: 9521 | Time: 792 ms
+  Iteracja 5/100 | Cost: 9615 | Time: 1310 ms
+  Iteracja 6/100 | Cost: 9654 | Time: 865 ms
+  Iteracja 7/100 | Cost: 9352 | Time: 941 ms
+  Iteracja 8/100 | Cost: 9580 | Time: 1244 ms
+  Iteracja 9/100 | Cost: 9430 | Time: 1308 ms
+  Iteracja 10/100 | Cost: 9558 | Time: 1075 ms
+  Iteracja 11/100 | Cost: 9356 | Time: 1006 ms
+  Iteracja 12/100 | Cost: 9497 | Time: 1108 ms
+  Iteracja 13/100 | Cost: 9595 | Time: 888 ms
+  Iteracja 14/100 | Cost: 9558 | Time: 748 ms
+  Iteracja 15/100 | Cost: 9450 | Time: 1283 ms
+  Iteracja 16/100 | Cost: 9520 | Time: 772 ms
+  Iteracja 17/100 | Cost: 9508 | Time: 1100 ms
+  Iteracja 18/100 | Cost: 9594 | Time: 1026 ms
+  Iteracja 19/100 | Cost: 9503 | Time: 1275 ms
+  Iteracja 20/100 | Cost: 9560 | Time: 1166 ms
+  Iteracja 21/100 | Cost: 9550 | Time: 973 ms
+  Iteracja 22/100 | Cost: 9611 | Time: 934 ms
+  Iteracja 23/100 | Cost: 9597 | Time: 1115 ms
+  Iteracja 24/100 | Cost: 9531 | Time: 1002 ms
+  Iteracja 25/100 | Cost: 9615 | Time: 870 ms
+  Iteracja 26/100 | Cost: 9409 | Time: 959 ms
+  Iteracja 27/100 | Cost: 9395 | Time: 1305 ms
+  Iteracja 28/100 | Cost: 9581 | Time: 945 ms
+  Iteracja 29/100 | Cost: 9540 | Time: 1033 ms
+  Iteracja 30/100 | Cost: 9477 | Time: 1134 ms
+  Iteracja 31/100 | Cost: 9439 | Time: 895 ms
+  Iteracja 32/100 | Cost: 9421 | Time: 1183 ms
+  Iteracja 33/100 | Cost: 9584 | Time: 1089 ms
+  Iteracja 34/100 | Cost: 9549 | Time: 1393 ms
+  Iteracja 35/100 | Cost: 9469 | Time: 1244 ms
+  Iteracja 36/100 | Cost: 9486 | Time: 1139 ms
+  Iteracja 37/100 | Cost: 9545 | Time: 972 ms
+  Iteracja 38/100 | Cost: 9610 | Time: 937 ms
+  Iteracja 39/100 | Cost: 9579 | Time: 1108 ms
+  Iteracja 40/100 | Cost: 9535 | Time: 1123 ms
+  Iteracja 41/100 | Cost: 9645 | Time: 778 ms
+  Iteracja 42/100 | Cost: 9552 | Time: 1121 ms
+  Iteracja 43/100 | Cost: 9483 | Time: 1010 ms
+  Iteracja 44/100 | Cost: 9596 | Time: 942 ms
+  Iteracja 45/100 | Cost: 9616 | Time: 1065 ms
+  Iteracja 46/100 | Cost: 9613 | Time: 966 ms
+  Iteracja 47/100 | Cost: 9461 | Time: 1079 ms
+  Iteracja 48/100 | Cost: 9395 | Time: 1111 ms
+  Iteracja 49/100 | Cost: 9664 | Time: 870 ms
+  Iteracja 50/100 | Cost: 9504 | Time: 1216 ms
+  Iteracja 51/100 | Cost: 9421 | Time: 750 ms
+  Iteracja 52/100 | Cost: 9420 | Time: 1821 ms
+  Iteracja 53/100 | Cost: 9494 | Time: 1086 ms
+  Iteracja 54/100 | Cost: 9509 | Time: 1254 ms
+  Iteracja 55/100 | Cost: 9575 | Time: 1252 ms
+  Iteracja 56/100 | Cost: 9678 | Time: 936 ms
+  Iteracja 57/100 | Cost: 9613 | Time: 1094 ms
+  Iteracja 58/100 | Cost: 9498 | Time: 1264 ms
+  Iteracja 59/100 | Cost: 9504 | Time: 1384 ms
+  Iteracja 60/100 | Cost: 9531 | Time: 876 ms
+  Iteracja 61/100 | Cost: 9725 | Time: 875 ms
+  Iteracja 62/100 | Cost: 9626 | Time: 1220 ms
+  Iteracja 63/100 | Cost: 9489 | Time: 1224 ms
+  Iteracja 64/100 | Cost: 9505 | Time: 1326 ms
+  Iteracja 65/100 | Cost: 9496 | Time: 1063 ms
+  Iteracja 66/100 | Cost: 9551 | Time: 1194 ms
+  Iteracja 67/100 | Cost: 9402 | Time: 1403 ms
+  Iteracja 68/100 | Cost: 9487 | Time: 1261 ms
+  Iteracja 69/100 | Cost: 9573 | Time: 974 ms
+  Iteracja 70/100 | Cost: 9454 | Time: 1120 ms
+  Iteracja 71/100 | Cost: 9687 | Time: 1062 ms
+  Iteracja 72/100 | Cost: 9452 | Time: 1017 ms
+  Iteracja 73/100 | Cost: 9439 | Time: 1140 ms
+  Iteracja 74/100 | Cost: 9437 | Time: 933 ms
+  Iteracja 75/100 | Cost: 9516 | Time: 998 ms
+  Iteracja 76/100 | Cost: 9465 | Time: 1213 ms
+  Iteracja 77/100 | Cost: 9474 | Time: 1218 ms
+  Iteracja 78/100 | Cost: 9410 | Time: 1126 ms
+  Iteracja 79/100 | Cost: 9722 | Time: 802 ms
+  Iteracja 80/100 | Cost: 9352 | Time: 1132 ms
+  Iteracja 81/100 | Cost: 9603 | Time: 747 ms
+  Iteracja 82/100 | Cost: 9545 | Time: 1064 ms
+  Iteracja 83/100 | Cost: 9397 | Time: 1300 ms
+  Iteracja 84/100 | Cost: 9635 | Time: 1064 ms
+  Iteracja 85/100 | Cost: 9497 | Time: 822 ms
+  Iteracja 86/100 | Cost: 9381 | Time: 1055 ms
+  Iteracja 87/100 | Cost: 9397 | Time: 1203 ms
+  Iteracja 88/100 | Cost: 9545 | Time: 863 ms
+  Iteracja 89/100 | Cost: 9476 | Time: 1010 ms
+  Iteracja 90/100 | Cost: 9585 | Time: 1327 ms
+  Iteracja 91/100 | Cost: 9650 | Time: 1199 ms
+  Iteracja 92/100 | Cost: 9449 | Time: 1062 ms
+  Iteracja 93/100 | Cost: 9445 | Time: 1386 ms
+  Iteracja 94/100 | Cost: 9457 | Time: 1291 ms
+  Iteracja 95/100 | Cost: 9657 | Time: 763 ms
+  Iteracja 96/100 | Cost: 9696 | Time: 1001 ms
+  Iteracja 97/100 | Cost: 9610 | Time: 852 ms
+  Iteracja 98/100 | Cost: 9511 | Time: 1097 ms
+  Iteracja 99/100 | Cost: 9694 | Time: 1084 ms
+  Iteracja 100/100 | Cost: 9381 | Time: 1198 ms
+
+Podsumowanie dla "qa194.tsp":
+  Algorytm:     Genetic_PMX
+  Average Cost: 9523
+  Best Cost:    9352
+  Saved best solution to: dataSol/qa194Genetic_PMX.sol
+"data/tz6117.tsp"
+"data/uy734.tsp"
+==================================================
+File: "uy734.tsp" (Vertices: 734)
+Running Genetic_PMX with 100 iterations...
+  Iteracja 1/100 | Cost: 85316 | Time: 24221 ms
+  Iteracja 2/100 | Cost: 84822 | Time: 24106 ms
+  Iteracja 3/100 | Cost: 85222 | Time: 23171 ms
+  Iteracja 4/100 | Cost: 85519 | Time: 25660 ms
+  Iteracja 5/100 | Cost: 84971 | Time: 28643 ms
+  Iteracja 6/100 | Cost: 85416 | Time: 26789 ms
+  Iteracja 7/100 | Cost: 85743 | Time: 23331 ms
+  Iteracja 8/100 | Cost: 85967 | Time: 23020 ms
+  Iteracja 9/100 | Cost: 83933 | Time: 26173 ms
+  Iteracja 10/100 | Cost: 85182 | Time: 24840 ms
+  Iteracja 11/100 | Cost: 85269 | Time: 26373 ms
+  Iteracja 12/100 | Cost: 86056 | Time: 24238 ms
+  Iteracja 13/100 | Cost: 85156 | Time: 24461 ms
+  Iteracja 14/100 | Cost: 84930 | Time: 23248 ms
+  Iteracja 15/100 | Cost: 83963 | Time: 24586 ms
+  Iteracja 16/100 | Cost: 83910 | Time: 26220 ms
+  Iteracja 17/100 | Cost: 84797 | Time: 24883 ms
+  Iteracja 18/100 | Cost: 85638 | Time: 24227 ms
+  Iteracja 19/100 | Cost: 85133 | Time: 23909 ms
+  Iteracja 20/100 | Cost: 85619 | Time: 26090 ms
+  Iteracja 21/100 | Cost: 85085 | Time: 25266 ms
+  Iteracja 22/100 | Cost: 84458 | Time: 25090 ms
+  Iteracja 23/100 | Cost: 85880 | Time: 22920 ms
+  Iteracja 24/100 | Cost: 85458 | Time: 24316 ms
+  Iteracja 25/100 | Cost: 84344 | Time: 26923 ms
+  Iteracja 26/100 | Cost: 83411 | Time: 30587 ms
+  Iteracja 27/100 | Cost: 85569 | Time: 26611 ms
+  Iteracja 28/100 | Cost: 84883 | Time: 24568 ms
+  Iteracja 29/100 | Cost: 86210 | Time: 24735 ms
+  Iteracja 30/100 | Cost: 85102 | Time: 25650 ms
+  Iteracja 31/100 | Cost: 85486 | Time: 25859 ms
+  Iteracja 32/100 | Cost: 85398 | Time: 25034 ms
+  Iteracja 33/100 | Cost: 85062 | Time: 24319 ms
+  Iteracja 34/100 | Cost: 85174 | Time: 24422 ms
+  Iteracja 35/100 | Cost: 84498 | Time: 24735 ms
+  Iteracja 36/100 | Cost: 85246 | Time: 27794 ms
+  Iteracja 37/100 | Cost: 83683 | Time: 28113 ms
+  Iteracja 38/100 | Cost: 85526 | Time: 23756 ms
+  Iteracja 39/100 | Cost: 85417 | Time: 24376 ms
+  Iteracja 40/100 | Cost: 84719 | Time: 24577 ms
+  Iteracja 41/100 | Cost: 84796 | Time: 25399 ms
+  Iteracja 42/100 | Cost: 84044 | Time: 30882 ms
+  Iteracja 43/100 | Cost: 84920 | Time: 24792 ms
+  Iteracja 44/100 | Cost: 85145 | Time: 23256 ms
+  Iteracja 45/100 | Cost: 84707 | Time: 23903 ms
+  Iteracja 46/100 | Cost: 84802 | Time: 30147 ms
+  Iteracja 47/100 | Cost: 84616 | Time: 25660 ms
+  Iteracja 48/100 | Cost: 85898 | Time: 24147 ms
+  Iteracja 49/100 | Cost: 84871 | Time: 24071 ms
+  Iteracja 50/100 | Cost: 85332 | Time: 23361 ms
+  Iteracja 51/100 | Cost: 83239 | Time: 31335 ms
+  Iteracja 52/100 | Cost: 84516 | Time: 23017 ms
+  Iteracja 53/100 | Cost: 85104 | Time: 24979 ms
+  Iteracja 54/100 | Cost: 85388 | Time: 23463 ms
+  Iteracja 55/100 | Cost: 85133 | Time: 25620 ms
+  Iteracja 56/100 | Cost: 85729 | Time: 24372 ms
+  Iteracja 57/100 | Cost: 85139 | Time: 22782 ms
+  Iteracja 58/100 | Cost: 86048 | Time: 26750 ms
+  Iteracja 59/100 | Cost: 83924 | Time: 24580 ms
+  Iteracja 60/100 | Cost: 85209 | Time: 23871 ms
+  Iteracja 61/100 | Cost: 85687 | Time: 26286 ms
+  Iteracja 62/100 | Cost: 84982 | Time: 24870 ms
+  Iteracja 63/100 | Cost: 85210 | Time: 28345 ms
+  Iteracja 64/100 | Cost: 84964 | Time: 24688 ms
+  Iteracja 65/100 | Cost: 84861 | Time: 24789 ms
+  Iteracja 66/100 | Cost: 84763 | Time: 26882 ms
+  Iteracja 67/100 | Cost: 84945 | Time: 21283 ms
+  Iteracja 68/100 | Cost: 85829 | Time: 24229 ms
+  Iteracja 69/100 | Cost: 85252 | Time: 24333 ms
+  Iteracja 70/100 | Cost: 85687 | Time: 26242 ms
+  Iteracja 71/100 | Cost: 85728 | Time: 24235 ms
+  Iteracja 72/100 | Cost: 84603 | Time: 27454 ms
+  Iteracja 73/100 | Cost: 85592 | Time: 25576 ms
+  Iteracja 74/100 | Cost: 84592 | Time: 24188 ms
+  Iteracja 75/100 | Cost: 84582 | Time: 24742 ms
+  Iteracja 76/100 | Cost: 85604 | Time: 24868 ms
+  Iteracja 77/100 | Cost: 85740 | Time: 25939 ms
+  Iteracja 78/100 | Cost: 83513 | Time: 36747 ms
+  Iteracja 79/100 | Cost: 85117 | Time: 27994 ms
+  Iteracja 80/100 | Cost: 85162 | Time: 26556 ms
+  Iteracja 81/100 | Cost: 84955 | Time: 29205 ms
+  Iteracja 82/100 | Cost: 85611 | Time: 22870 ms
+  Iteracja 83/100 | Cost: 85908 | Time: 22772 ms
+  Iteracja 84/100 | Cost: 84153 | Time: 24915 ms
+  Iteracja 85/100 | Cost: 84869 | Time: 24092 ms
+  Iteracja 86/100 | Cost: 85596 | Time: 23733 ms
+  Iteracja 87/100 | Cost: 86076 | Time: 21621 ms
+  Iteracja 88/100 | Cost: 85367 | Time: 22832 ms
+  Iteracja 89/100 | Cost: 85297 | Time: 24039 ms
+  Iteracja 90/100 | Cost: 84954 | Time: 25620 ms
+  Iteracja 91/100 | Cost: 84566 | Time: 30146 ms
+  Iteracja 92/100 | Cost: 83219 | Time: 26041 ms
+  Iteracja 93/100 | Cost: 85428 | Time: 23085 ms
+  Iteracja 94/100 | Cost: 83735 | Time: 29181 ms
+  Iteracja 95/100 | Cost: 84800 | Time: 26755 ms
+  Iteracja 96/100 | Cost: 84559 | Time: 25305 ms
+  Iteracja 97/100 | Cost: 85323 | Time: 24990 ms
+  Iteracja 98/100 | Cost: 84418 | Time: 25128 ms
+  Iteracja 99/100 | Cost: 84209 | Time: 23886 ms
+  Iteracja 100/100 | Cost: 83763 | Time: 31538 ms
+
+Podsumowanie dla "uy734.tsp":
+  Algorytm:     Genetic_PMX
+  Average Cost: 85009
+  Best Cost:    83219
+  Saved best solution to: dataSol/uy734Genetic_PMX.sol
+"data/wi29.tsp"
+==================================================
+File: "wi29.tsp" (Vertices: 29)
+Running Genetic_PMX with 100 iterations...
+  Iteracja 1/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 2/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 3/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 4/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 5/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 6/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 7/100 | Cost: 27603 | Time: 24 ms
+  Iteracja 8/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 9/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 10/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 11/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 12/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 13/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 14/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 15/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 16/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 17/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 18/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 19/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 20/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 21/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 22/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 23/100 | Cost: 27603 | Time: 19 ms
+  Iteracja 24/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 25/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 26/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 27/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 28/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 29/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 30/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 31/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 32/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 33/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 34/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 35/100 | Cost: 27603 | Time: 19 ms
+  Iteracja 36/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 37/100 | Cost: 27603 | Time: 19 ms
+  Iteracja 38/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 39/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 40/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 41/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 42/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 43/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 44/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 45/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 46/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 47/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 48/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 49/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 50/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 51/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 52/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 53/100 | Cost: 27603 | Time: 23 ms
+  Iteracja 54/100 | Cost: 27603 | Time: 23 ms
+  Iteracja 55/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 56/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 57/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 58/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 59/100 | Cost: 27603 | Time: 23 ms
+  Iteracja 60/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 61/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 62/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 63/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 64/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 65/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 66/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 67/100 | Cost: 27603 | Time: 27 ms
+  Iteracja 68/100 | Cost: 27603 | Time: 24 ms
+  Iteracja 69/100 | Cost: 27603 | Time: 27 ms
+  Iteracja 70/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 71/100 | Cost: 27603 | Time: 27 ms
+  Iteracja 72/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 73/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 74/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 75/100 | Cost: 27603 | Time: 25 ms
+  Iteracja 76/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 77/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 78/100 | Cost: 27603 | Time: 28 ms
+  Iteracja 79/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 80/100 | Cost: 27603 | Time: 18 ms
+  Iteracja 81/100 | Cost: 27603 | Time: 27 ms
+  Iteracja 82/100 | Cost: 27603 | Time: 27 ms
+  Iteracja 83/100 | Cost: 27603 | Time: 23 ms
+  Iteracja 84/100 | Cost: 27603 | Time: 26 ms
+  Iteracja 85/100 | Cost: 27603 | Time: 26 ms
+  Iteracja 86/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 87/100 | Cost: 27603 | Time: 23 ms
+  Iteracja 88/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 89/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 90/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 91/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 92/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 93/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 94/100 | Cost: 27603 | Time: 20 ms
+  Iteracja 95/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 96/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 97/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 98/100 | Cost: 27603 | Time: 22 ms
+  Iteracja 99/100 | Cost: 27603 | Time: 21 ms
+  Iteracja 100/100 | Cost: 27603 | Time: 20 ms
+
+Podsumowanie dla "wi29.tsp":
+  Algorytm:     Genetic_PMX
+  Average Cost: 27603
+  Best Cost:    27603
+  Saved best solution to: dataSol/wi29Genetic_PMX.sol
+"data/zi929.tsp"
+==================================================
+File: "zi929.tsp" (Vertices: 929)
+Running Genetic_PMX with 100 iterations...
+  Iteracja 1/100 | Cost: 100954 | Time: 54477 ms
+  Iteracja 2/100 | Cost: 102442 | Time: 47575 ms
+  Iteracja 3/100 | Cost: 100788 | Time: 47155 ms
+  Iteracja 4/100 | Cost: 100849 | Time: 48920 ms
+  Iteracja 5/100 | Cost: 99997 | Time: 56857 ms
+  Iteracja 6/100 | Cost: 101266 | Time: 47474 ms
+  Iteracja 7/100 | Cost: 100915 | Time: 44675 ms
+  Iteracja 8/100 | Cost: 102286 | Time: 44410 ms
+  Iteracja 9/100 | Cost: 101860 | Time: 53008 ms
+  Iteracja 10/100 | Cost: 102022 | Time: 44652 ms
+  Iteracja 11/100 | Cost: 101690 | Time: 42666 ms
+  Iteracja 12/100 | Cost: 101917 | Time: 46498 ms
+  Iteracja 13/100 | Cost: 100742 | Time: 48132 ms
+  Iteracja 14/100 | Cost: 102319 | Time: 47923 ms
+  Iteracja 15/100 | Cost: 101915 | Time: 46278 ms
+  Iteracja 16/100 | Cost: 102287 | Time: 44894 ms
+  Iteracja 17/100 | Cost: 101908 | Time: 46868 ms
+  Iteracja 18/100 | Cost: 101719 | Time: 48741 ms
+  Iteracja 19/100 | Cost: 101848 | Time: 48589 ms
+  Iteracja 20/100 | Cost: 101681 | Time: 47126 ms
+  Iteracja 21/100 | Cost: 101248 | Time: 44281 ms
+  Iteracja 22/100 | Cost: 102004 | Time: 55463 ms
+  Iteracja 23/100 | Cost: 100852 | Time: 50798 ms
+  Iteracja 24/100 | Cost: 100668 | Time: 56641 ms
+  Iteracja 25/100 | Cost: 103020 | Time: 52643 ms
+  Iteracja 26/100 | Cost: 102045 | Time: 47219 ms
+  Iteracja 27/100 | Cost: 102742 | Time: 44323 ms
+  Iteracja 28/100 | Cost: 102566 | Time: 45190 ms
+  Iteracja 29/100 | Cost: 100455 | Time: 44501 ms
+  Iteracja 30/100 | Cost: 101790 | Time: 53600 ms
+  Iteracja 31/100 | Cost: 102120 | Time: 49841 ms
+  Iteracja 32/100 | Cost: 101552 | Time: 48762 ms
+  Iteracja 33/100 | Cost: 100905 | Time: 50141 ms
+  Iteracja 34/100 | Cost: 102010 | Time: 44506 ms
+  Iteracja 35/100 | Cost: 99908 | Time: 47743 ms
+  Iteracja 36/100 | Cost: 100289 | Time: 49194 ms
+  Iteracja 37/100 | Cost: 101146 | Time: 50897 ms
+  Iteracja 38/100 | Cost: 100548 | Time: 57729 ms
+  Iteracja 39/100 | Cost: 100520 | Time: 54531 ms
+  Iteracja 40/100 | Cost: 101282 | Time: 50022 ms
+  Iteracja 41/100 | Cost: 99877 | Time: 56967 ms
+  Iteracja 42/100 | Cost: 102146 | Time: 43233 ms
+  Iteracja 43/100 | Cost: 102526 | Time: 49095 ms
+  Iteracja 44/100 | Cost: 100780 | Time: 65322 ms
+  Iteracja 45/100 | Cost: 102366 | Time: 44149 ms
+  Iteracja 46/100 | Cost: 101204 | Time: 48232 ms
+  Iteracja 47/100 | Cost: 101259 | Time: 51113 ms
+  Iteracja 48/100 | Cost: 102071 | Time: 50422 ms
+  Iteracja 49/100 | Cost: 102427 | Time: 51795 ms
+  Iteracja 50/100 | Cost: 101232 | Time: 50106 ms
+  Iteracja 51/100 | Cost: 101314 | Time: 48449 ms
+  Iteracja 52/100 | Cost: 102365 | Time: 47300 ms
+  Iteracja 53/100 | Cost: 101750 | Time: 50500 ms
+  Iteracja 54/100 | Cost: 101651 | Time: 48354 ms
+  Iteracja 55/100 | Cost: 102657 | Time: 47832 ms
+  Iteracja 56/100 | Cost: 100567 | Time: 48116 ms
+  Iteracja 57/100 | Cost: 101509 | Time: 45087 ms
+  Iteracja 58/100 | Cost: 103062 | Time: 48034 ms
+  Iteracja 59/100 | Cost: 103350 | Time: 47877 ms
+  Iteracja 60/100 | Cost: 100612 | Time: 45925 ms
+  Iteracja 61/100 | Cost: 101827 | Time: 52050 ms
+  Iteracja 62/100 | Cost: 104023 | Time: 47508 ms
+  Iteracja 63/100 | Cost: 100960 | Time: 46726 ms
+  Iteracja 64/100 | Cost: 102455 | Time: 44015 ms
+  Iteracja 65/100 | Cost: 102368 | Time: 43080 ms
+  Iteracja 66/100 | Cost: 101070 | Time: 46104 ms
+  Iteracja 67/100 | Cost: 101925 | Time: 55390 ms
+  Iteracja 68/100 | Cost: 101327 | Time: 51813 ms
+  Iteracja 69/100 | Cost: 102401 | Time: 47660 ms
+  Iteracja 70/100 | Cost: 101090 | Time: 47039 ms
+  Iteracja 71/100 | Cost: 102462 | Time: 42743 ms
+  Iteracja 72/100 | Cost: 101606 | Time: 49552 ms
+  Iteracja 73/100 | Cost: 100153 | Time: 49140 ms
+  Iteracja 74/100 | Cost: 101663 | Time: 43444 ms
+  Iteracja 75/100 | Cost: 101873 | Time: 47090 ms
+  Iteracja 76/100 | Cost: 101593 | Time: 49038 ms
+  Iteracja 77/100 | Cost: 101066 | Time: 45155 ms
+  Iteracja 78/100 | Cost: 102308 | Time: 43430 ms
+  Iteracja 79/100 | Cost: 101073 | Time: 49857 ms
+  Iteracja 80/100 | Cost: 101560 | Time: 48156 ms
+  Iteracja 81/100 | Cost: 102308 | Time: 45784 ms
+  Iteracja 82/100 | Cost: 102349 | Time: 45432 ms
+  Iteracja 83/100 | Cost: 101992 | Time: 48559 ms
+  Iteracja 84/100 | Cost: 100827 | Time: 49797 ms
+  Iteracja 85/100 | Cost: 103745 | Time: 44806 ms
+  Iteracja 86/100 | Cost: 102578 | Time: 41466 ms
+  Iteracja 87/100 | Cost: 100195 | Time: 48212 ms
+  Iteracja 88/100 | Cost: 102723 | Time: 48294 ms
+  Iteracja 89/100 | Cost: 101061 | Time: 113500 ms
+  Iteracja 90/100 | Cost: 101794 | Time: 139456 ms
+  Iteracja 91/100 | Cost: 101149 | Time: 134007 ms
+  Iteracja 92/100 | Cost: 100778 | Time: 152883 ms
+  Iteracja 93/100 | Cost: 100607 | Time: 140000 ms
+  Iteracja 94/100 | Cost: 102070 | Time: 132267 ms
+  Iteracja 95/100 | Cost: 102675 | Time: 141375 ms
+  Iteracja 96/100 | Cost: 101225 | Time: 161459 ms
+  Iteracja 97/100 | Cost: 101300 | Time: 138371 ms
+  Iteracja 98/100 | Cost: 100257 | Time: 157872 ms
+  Iteracja 99/100 | Cost: 102074 | Time: 135387 ms
+  Iteracja 100/100 | Cost: 100554 | Time: 142833 ms
+
+Podsumowanie dla "zi929.tsp":
+  Algorytm:     Genetic_PMX
+  Average Cost: 101608
+  Best Cost:    99877
+  Saved best solution to: dataSol/zi929Genetic_PMX.sol
