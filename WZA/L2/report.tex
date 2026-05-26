@@ -1,0 +1,129 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+
+\geometry{margin=2cm}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    breaklines=true,
+    captionpos=b
+}
+
+\title{Wybrane zagadnienia Algebry 2026\\Sprawozdanie 2.}
+\author{Sara Żyndul \\ 279686}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Laboratorium 4: Dzielenie wielomianów wielu zmiennych}
+
+\subsection{Ad a) Struktura obsługująca wielomiany wielu zmiennych}
+Wielomiany wielu zmiennych zostały zaimplementowane w oparciu o strukturę słownikową (tzw. reprezentację rzadką). Każdy wielomian to obiekt słownika (\textit{dictionary}), w którym:
+\begin{itemize}
+    \item \textbf{Klucz} reprezentuje wektor potęg poszczególnych zmiennych w postaci niemutowalnej krotki (\textit{tuple}). Na przykład dla pierścienia $\mathbb{R}[x,y,z]$ klucz \texttt{(2, 7, 0)} odpowiada jednomianowi $x^2y^7$.
+    \item \textbf{Wartość} odpowiada niezerowemu współczynnikowi rzeczywistemu przy danym jednomianie.
+\end{itemize}
+Taka struktura pozwala uniknąć wybuchu pamięciowego (charakterystycznego dla reprezentacji gęstej) i ułatwia wykonywanie operacji algebraicznych – dodawanie wielomianów sprowadza się do sumowania wartości przypisanych do tych samych kluczy.
+
+\subsection{Ad b) Porządki na jednomianach}
+Wielomiany wielu zmiennych nie posiadają jednego, naturalnego wyrazu wiodącego (\textit{Leading Term} -- LT). Hierarchię tę należy narzucić poprzez określenie porządku:
+\begin{itemize}
+    \item \textbf{Standardowy porządek leksykograficzny (Lex):} Porównuje wektory potęg od lewej do prawej, co jest tożsame ze słownikowym uporządkowaniem wyrazów. Pierwsza zmienna (np. $x$) ma absolutny priorytet nad kolejnymi.
+    \item \textbf{Permutowany Lex:} Działa identycznie jak standardowy porządek leksykograficzny, lecz przed porównaniem zmieniona zostaje kolejność zmiennych w wektorze. Pozwala to wymusić nienaturalną hierarchię, na przykład wymusić, aby zmienna $y$ dominowała nad $z$, a $z$ nad $x$ ($y > z > x$).
+    \item \textbf{GradedLex (GrLex):} Porządek z gradacją (stopniowany). W pierwszej kolejności porównywany jest całkowity stopień jednomianu (suma wszystkich potęg zmiennych). Jednomian o wyższym stopniu całkowitym jest uznawany za większy. Dopiero w przypadku zrównania stopni, rozstrzygnięcie następuje na podstawie standardowego porządku Lex.
+\end{itemize}
+
+\subsection{Ad c) Funkcja \texttt{PolynomialReduce}}
+Zaimplementowana funkcja \texttt{PolynomialReduce} realizuje algorytm dzielenia wielomianów wielu zmiennych przez ciąg dzielników. Poniżej przedstawiono kluczowy fragment kodu odpowiedzialny za pętlę redukującą:
+
+\begin{lstlisting}[language=Python, caption={Kluczowy fragment pętli redukującej w PolynomialReduce}]
+while p:
+    lt_p_exp, lt_p_coeff = get_lt(p, order_key)
+    division_occurred = False
+
+    for i, g in enumerate(G):
+        lt_g_exp, lt_g_coeff = get_lt(g, order_key)
+        if not lt_g_exp: continue
+        
+        # Sprawdzenie czy LT(g_i) dzieli LT(p)
+        if divides(lt_g_exp, lt_p_exp):
+            mult_exp = tuple(e1 - e2 for e1, e2 in zip(lt_p_exp, lt_g_exp))
+            mult_coeff = lt_p_coeff / lt_g_coeff
+            
+            # Aktualizacja i-tego ilorazu (alfa)
+            alphas[i][mult_exp] = alphas[i].get(mult_exp, 0) + mult_coeff
+            alphas[i] = clean_poly(alphas[i])
+            
+            # Odjecie od p wielokrotnosci dzielnika g_i
+            term_times_g = term_mult(mult_coeff, mult_exp, g)
+            neg_term = {k: -v for k, v in term_times_g.items()}
+            p = poly_add(p, neg_term)
+            
+            division_occurred = True
+            break  # Algorytm jest zachlanny
+            
+    if not division_occurred:
+        # Nieredukowalny wiodacy jednomian trafia do ostatecznej reszty
+        r[lt_p_exp] = r.get(lt_p_exp, 0) + lt_p_coeff
+        r = clean_poly(r)
+        del p[lt_p_exp]
+\end{lstlisting}
+
+\subsection{Ad d) Rozwiązanie Ćwiczenia 37 i wpływ kolejności}
+Przeanalizowano porządek GradedLex ($x>y>z$) dla wielomianów: $f = x^3 - x^2y - x^2z$, $g_1 = x^2y - z$ oraz $g_2 = xy - 1$.
+Zgodnie z implementacją uzyskano następujące wyniki redukcji:
+\begin{itemize}
+    \item Redukcja $f$ przez ciąg $(g_1, g_2)$ dała resztę: $r_1 = x^3 - x^2z - z$.
+    \item Redukcja $f$ przez ciąg $(g_2, g_1)$ dała resztę: $r_2 = x^3 - x^2z - x$.
+\end{itemize}
+
+\textbf{Uzasadnienie różnicy:} 
+Wyniki są różne ze względu na \textit{zachłanność} algorytmu dzielenia. W procesie redukcji dla wyjściowego wielomianu pojawia się składnik $-x^2y$. Okazuje się, że wiodące jednomiany z obu dzielników (zarówno $LT(g_1) = x^2y$, jak i $LT(g_2) = xy$) są w stanie bez reszty podzielić ten składnik. Algorytm nie dokonuje analizy głębszej i wybiera pierwszy pasujący dzielnik z podanego ciągu. Zamiana kolejności na $(g_2, g_1)$ sprawia, że składnik $-x^2y$ zostaje zredukowany przez $xy$ zamiast przez $x^2y$, co odcina od $f$ zupełnie inny "ogon" algebraiczny (odpowiednio $-z$ lub $-x$).
+
+Takie zachowanie dowodzi, że ciąg wielomianów $(g_1, g_2)$ nie stanowi Bazy Gröbnera generowanego przez siebie ideału. Warto jednak odnotować fundamentalną własność algorytmu: różnica uzyskanych reszt $r_1 - r_2$ jest zawsze elementem ideału $\langle g_1, g_2 \rangle$.
+
+\subsection{Ad e) Redukcja wielomianu $h(x,y,z)$ dla zmiennych z indeksu}
+Na podstawie przydzielonych zmiennych $a=2, b=7, c=9, d=6, e=8, f=6$ zdefiniowano wielomian:
+\begin{equation}
+    h(x,y,z) = x^2 y^7 - y^9 z^6 + x^8 z^6
+\end{equation}
+Zaproponowano ciąg dzielników $G = (g_1, g_2)$, gdzie $g_1 = x^2 - z$ oraz $g_2 = y^7 - x$. 
+Dokonano ewaluacji wywołania \texttt{PolynomialReduce(h, G)} dla trzech różnych porządków leksykograficznych (zadanych przez zmianę permutacji priorytetów zmiennych). Eksperyment zwrócił trzy zupełnie różne reszty:
+
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, title={Wynik z terminala}]
+Testowanie wielomianu h dla G = [x^2 - z, y^7 - x]:
+
+Nowa reszta dla porzadku x > y > z:
+Reszta (r): {(0, 9, 6): -1.0, (0, 7, 1): 1.0, (0, 0, 10): 1.0}
+
+Nowa reszta dla porzadku y > x > z:
+Reszta (r): {(1, 2, 6): -1.0, (1, 0, 1): 1.0, (0, 0, 10): 1.0}
+
+Nowa reszta dla porzadku y > z > x:
+Reszta (r): {(13, 2, 0): -1.0, (20, 0, 0): 1.0, (3, 0, 0): 1.0}
+\end{lstlisting}
+
+\textbf{Źródło obserwowanych różnic:}
+Wybór określonej permutacji zmiennych fundamentalnie zmienia to, który ze składników staje się jednomianem wiodącym $LT$. Na przykład:
+\begin{itemize}
+    \item W porządku Lex przy zmiennych ($x > y > z$) wyrazem wiodącym $h$ jest $x^8 z^6$.
+    \item W porządku Lex przy zmiennych ($y > x > z$) wyrazem wiodącym $h$ staje się $-y^9 z^6$.
+\end{itemize}
+Zmiana definicji $LT(h)$ (a także $LT(g_1)$ i $LT(g_2)$) całkowicie modyfikuje krok początkowy algorytmu. Redukcja wielomianu $h$ zaczyna się od "zgryzania" zupełnie innego składnika, co determinuje wygenerowanie innego zestawu składników podlegających redukcji w kolejnych iteracjach. W efekcie (ponieważ $G$ ponownie nie jest Bazą Gröbnera) ostateczne nieredukowalne ułamki trafiające do reszty przyjmują w każdej permutacji odmienną algebraiczną formę.
+\end{document}
