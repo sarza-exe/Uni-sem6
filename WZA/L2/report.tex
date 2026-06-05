@@ -7,6 +7,8 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsfonts}
 
 \geometry{margin=2cm}
 
@@ -89,8 +91,8 @@ while p:
 Przeanalizowano porządek GradedLex ($x>y>z$) dla wielomianów: $f = x^3 - x^2y - x^2z$, $g_1 = x^2y - z$ oraz $g_2 = xy - 1$.
 Zgodnie z implementacją uzyskano następujące wyniki redukcji:
 \begin{itemize}
-    \item Redukcja $f$ przez ciąg $(g_1, g_2)$ dała resztę: $r_1 = x^3 - x^2z - z$.
-    \item Redukcja $f$ przez ciąg $(g_2, g_1)$ dała resztę: $r_2 = x^3 - x^2z - x$.
+    \item Redukcja $f$ przez ciąg $(g_1, g_2)$: $f = -g_1 + 0 \cdot g_2 + (x^3 - x^2z - z)$.
+    \item Redukcja $f$ przez ciąg $(g_2, g_1)$: $f = -x \cdot g_2 + 0 \cdot g_1 + (x^3 - x^2z - x)$.
 \end{itemize}
 
 \textbf{Uzasadnienie różnicy:} 
@@ -126,4 +128,62 @@ Wybór określonej permutacji zmiennych fundamentalnie zmienia to, który ze sk�
     \item W porządku Lex przy zmiennych ($y > x > z$) wyrazem wiodącym $h$ staje się $-y^9 z^6$.
 \end{itemize}
 Zmiana definicji $LT(h)$ (a także $LT(g_1)$ i $LT(g_2)$) całkowicie modyfikuje krok początkowy algorytmu. Redukcja wielomianu $h$ zaczyna się od "zgryzania" zupełnie innego składnika, co determinuje wygenerowanie innego zestawu składników podlegających redukcji w kolejnych iteracjach. W efekcie (ponieważ $G$ ponownie nie jest Bazą Gröbnera) ostateczne nieredukowalne ułamki trafiające do reszty przyjmują w każdej permutacji odmienną algebraiczną formę.
+
+
+\section{Laboratorium 5: Godło Japonii jako krzywa i rozmaitość algebraiczna}
+
+\subsection{Modelowanie kształtu kamonu w układzie biegunowym}
+Wychodząc od klasycznego równania krzywej różanej typu Quadrifolium ($r = a\cos(2\theta)$), która generuje 4 płatki, podjęto próbę odwzorowania godła Japonii. Wyjściowe założenie prostej zmiany częstotliwości do formy $r = \cos(8\theta)$ prowadzi do uzyskania wąskich, odseparowanych promieni, które nie oddają pękatej, zwartej geometrii chryzantemy.
+
+W celu uzyskania wiernej rekonstrukcji graficznej wersji podwójnej, wprowadzono uniesienie promienia bazowego, operację wartości bezwzględnej oraz pierwiastkowanie. Zamiast dokonywać geometrycznego obrotu układu współrzędnych lub ręcznego przesunięcia parametru kątowego, wykorzystano naturalne przesunięcie fazowe zachodzące między funkcjami trygonometrycznymi. Ostateczny model matematyczny obu warstw zadany jest układem równań:
+
+\begin{itemize}
+    \item \textbf{Warstwa przednia (16 płatków głównych):}
+    \[ r_1(\theta) = 2 + 0.6 \cdot \sqrt{|\sin(8\theta)|} \]
+    \item \textbf{Warstwa tylna (16 płatków dopełniających):}
+    \[ r_2(\theta) = 2 + 0.6 \cdot \sqrt{|\cos(8\theta)|} \]
+\end{itemize}
+
+\noindent \textbf{Uzasadnienie wykorzystania własności trygonometrycznych:}
+Konstrukcja tylnej warstwy wymaga przesunięcia jej w fazie o dokładnie połowę szerokości płatka, co odpowiada kątowi $11.25^\circ$ ($\frac{\pi}{16}$ radianów). Analityczne podstawienie tego przesunięcia do argumentu funkcji sinus daje:
+\[ \sin\left(8\left(\theta - \frac{\pi}{16}\right)\right) = \sin\left(8\theta - \frac{\pi}{2}\right) = -\cos(8\theta) \]
+Ponieważ całe wyrażenie znajduje się pod operatorem wartości bezwzględnej, znak minus zostaje zredukowany:
+\[ \left|-\cos(8\theta)\right| = |\cos(8\theta)| \]
+Dzięki tej tożsamości, zastosowanie funkcji kosinus w drugim równaniu automatycznie generuje idealnie przesuniętą drugą warstwę płatków. Pozwala to na intuicyjny i zwięzły zapis krzywych bez konieczności stosowania złożonych transformacji geometrycznych.
+
+\noindent \textbf{Wyjaśnienie geometryczne modyfikacji:}
+\begin{enumerate}
+    \item \textbf{Liczba płatków:} Funkcje $|\sin(8\theta)|$ oraz $|\cos(8\theta)|$ w przedziale $2\pi$ generują dokładnie 16 powtórzeń (płatków) dla każdej z warstw.
+    \item \textbf{Ostre wcięcia (doliny):} Operator wartości bezwzględnej sprawia, że w miejscach zerowych funkcja gwałtownie zmienia zwrot (odbija się), co tworzy nieróżniczkowalne, ostre szczeliny na stykach płatków.
+    \item \textbf{Pękate wierzchołki:} Pierwiastek kwadratowy ($\sqrt{\dots}$) selektywnie podnosi wartości ułamkowe w otoczeniu maksimów, co spłaszcza korony płatków, nadając im pękaty kształt tożsamy z oryginalnym emblematem.
+\end{enumerate}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{geogebra-export.png}
+    \caption{Podwójna chryzantema cesarska (Kamon) wygenerowana w programie GeoGebra przy użyciu komplementarnych funkcji $\sin(8\theta)$ oraz $\cos(8\theta)$.}
+    \label{fig:kamon}
+\end{figure}
+
+\subsection{Przedstawienie krzywej zbliżonej jako rozmaitość algebraiczna}
+Funkcje nieliniowe zawierające operatory niealgebraiczne (wartość bezwzględna, pierwiastek) nie poddają się bezpośredniej transformacji wielomianowej. Aby przedstawić geometrię zbliżoną do cesarskiego złocienia jako \textbf{rozmaitość algebraiczną} (zbiór zer wielomianu wielu zmiennych $P(x,y) = 0$), rozważmy pokrewną, gładką krzywą 16-płatkową w układzie biegunowym:
+\[ r^2 = a + b \cdot \cos(16\theta) \]
+gdzie stałe dobrać można tak, aby $a > b > 0$, co zapobiega degeneracji promienia do zera.
+
+\noindent \textbf{Uzasadnienie transformacji do postaci wielomianowej:}
+Zgodnie ze wzorem de Moivre'a, funkcję wielokrotności kąta $\cos(16\theta)$ rozpisujemy jako część rzeczywistą wyrażenia $(\cos\theta + i\sin\theta)^{16}$. Korzystając z dwumianu Newtona, otrzymujemy jednorodny wielomian stopnia 16 zmiennych $\cos\theta$ oraz $\sin\theta$:
+\[ \cos(16\theta) = \sum_{k=0}^{8} \binom{16}{2k} (-1)^k \cos^{16-2k}(\theta) \sin^{2k}(\theta) \]
+Przejście do układu kartezjańskiego $2D$ realizowane jest poprzez standardowe podstawienia biegunowe $\cos\theta = \frac{x}{r}$ oraz $\sin\theta = \frac{y}{r}$:
+\[ \cos(16\theta) = \sum_{k=0}^{8} \binom{16}{2k} (-1)^k \frac{x^{16-2k} y^{2k}}{r^{16}} = \frac{Q_{16}(x, y)}{r^{16}} \]
+gdzie $Q_{16}(x, y) \in \mathbb{R}[x,y]$ jest jednorodnym wielomianem stopnia 16. Wprowadzając tę postać do wyjściowego równania, otrzymujemy:
+\[ r^2 = a + b \cdot \frac{Q_{16}(x, y)}{r^{16}} \]
+Mnożąc obustronnie przez mianownik $r^{16}$ w celu eliminacji ułamków:
+\[ r^{18} = a \cdot r^{16} + b \cdot Q_{16}(x, y) \]
+Wykorzystując tożsamość wielomianową układu kartezjańskiego $r^2 = x^2 + y^2$, zastępujemy potęgi promienia ($r^{18} = (x^2 + y^2)^9$ oraz $r^{16} = (x^2 + y^2)^8$), co po przeniesieniu na jedną stronę definiuje ostateczny wielomian $P(x, y)$:
+\[ P(x, y) = (x^2 + y^2)^9 - a(x^2 + y^2)^8 - b \cdot Q_{16}(x, y) = 0 \]
+Ponieważ $P(x, y) \in \mathbb{R}[x, y]$ jest czystym wielomianem stopnia 18, zbiór jego rozwiązań geometrycznych z definicji stanowi jawną \textbf{rozmaitość algebraiczną}.
+
+\section{Podsumowanie}
+Ostatnia część Lab. 5, czyli odwzorowanie chryzantemy, nie zostało wykonane.
+
 \end{document}
