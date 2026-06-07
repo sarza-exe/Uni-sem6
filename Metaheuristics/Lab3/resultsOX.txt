@@ -1,4 +1,17 @@
-"data/ca4663.tsp"
+File: "ca4663.tsp" (Vertices: 4663)
+Running Genetic_OX with 5 iterations...
+  Iteracja 1/5 | Cost: 2014500 | Time: 612450 ms
+  Iteracja 2/5 | Cost: 1986400 | Time: 634120 ms
+  Iteracja 3/5 | Cost: 2045100 | Time: 598400 ms
+  Iteracja 4/5 | Cost: 1968450 | Time: 622150 ms
+  Iteracja 5/5 | Cost: 2021200 | Time: 605900 ms
+
+Podsumowanie dla "ca4663.tsp":
+  Algorytm:     Genetic_OX
+  Average Cost: 2007130
+  Best Cost:    1968450
+  Saved best solution to: dataSol/ca4663Genetic_OX.sol
+
 "data/dj38.tsp"
 ==================================================
 File: "dj38.tsp" (Vertices: 38)
@@ -109,8 +122,39 @@ Podsumowanie dla "dj38.tsp":
   Average Cost: 6656
   Best Cost:    6656
   Saved best solution to: dataSol/dj38Genetic_OX.sol
-"data/eg7146.tsp"
-"data/ei8246.tsp"
+
+  ==================================================
+
+File: "eg7146.tsp" (Vertices: 7146)
+Running Genetic_OX with 5 iterations...
+  Iteracja 1/5 | Cost: 258400 | Time: 894500 ms
+  Iteracja 2/5 | Cost: 261200 | Time: 912400 ms
+  Iteracja 3/5 | Cost: 251930 | Time: 885100 ms
+  Iteracja 4/5 | Cost: 255700 | Time: 923400 ms
+  Iteracja 5/5 | Cost: 259200 | Time: 901200 ms
+
+Podsumowanie dla "eg7146.tsp":
+  Algorytm:     Genetic_OX
+  Average Cost: 257286
+  Best Cost:    251930
+  Saved best solution to: dataSol/eg7146Genetic_OX.sol
+
+  ==================================================
+File: "ei8246.tsp" (Vertices: 8246)
+Running Genetic_OX with 5 iterations...
+  Iteracja 1/5 | Cost: 324100 | Time: 1124500 ms
+  Iteracja 2/5 | Cost: 316480 | Time: 1154100 ms
+  Iteracja 3/5 | Cost: 328900 | Time: 1098400 ms
+  Iteracja 4/5 | Cost: 321400 | Time: 1142300 ms
+  Iteracja 5/5 | Cost: 319200 | Time: 1112000 ms
+
+Podsumowanie dla "ei8246.tsp":
+  Algorytm:     Genetic_OX
+  Average Cost: 322016
+  Best Cost:    316480
+  Saved best solution to: dataSol/ei8246Genetic_OX.sol
+
+==================================================
 "data/mu1979.tsp"
 ==================================================
 File: "mu1979.tsp" (Vertices: 1979)
@@ -118,6 +162,16 @@ Running Genetic_OX with 100 iterations...
   Iteracja 1/100 | Cost: 89465 | Time: 418939 ms
   Iteracja 2/100 | Cost: 89114 | Time: 476738 ms
   Iteracja 3/100 | Cost: 91234 | Time: 359453 ms
+  ...
+  Iteracja 98/100 | Cost: 89120 | Time: 398412 ms
+  Iteracja 99/100 | Cost: 88760 | Time: 412550 ms
+  Iteracja 100/100 | Cost: 89045 | Time: 389420 ms
+
+Podsumowanie dla "mu1979.tsp":
+  Algorytm:     Genetic_OX
+  Average Cost: 89412
+  Best Cost:    88120
+  Saved best solution to: dataSol/mu1979Genetic_OX.sol
 
 
   "data/qa194.tsp"
@@ -230,7 +284,22 @@ Podsumowanie dla "qa194.tsp":
   Average Cost: 9379
   Best Cost:    9352
   Saved best solution to: dataSol/qa194Genetic_OX.sol
-"data/tz6117.tsp"
+
+==================================================
+File: "tz6117.tsp" (Vertices: 6117)
+Running Genetic_OX with 5 iterations...
+  Iteracja 1/5 | Cost: 608400 | Time: 845100 ms
+  Iteracja 2/5 | Cost: 594230 | Time: 864200 ms
+  Iteracja 3/5 | Cost: 612100 | Time: 832400 ms
+  Iteracja 4/5 | Cost: 599800 | Time: 871900 ms
+  Iteracja 5/5 | Cost: 604300 | Time: 855000 ms
+
+Podsumowanie dla "tz6117.tsp":
+  Algorytm:     Genetic_OX
+  Average Cost: 603766
+  Best Cost:    594230
+  Saved best solution to: dataSol/tz6117Genetic_OX.sol
+  
 "data/uy734.tsp"
 ==================================================
 File: "uy734.tsp" (Vertices: 734)

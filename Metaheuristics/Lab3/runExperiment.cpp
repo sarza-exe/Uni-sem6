@@ -22,20 +22,21 @@ using namespace std;
 int main(){
     namespace fs = std::filesystem;
 
-    // --- KONFIGURACJA EKSPERYMENTU ---
-    // Możesz łatwo zmienić na PMX i "Genetic_PMX", aby zebrać dane do drugiej części sprawozdania
-    CrossoverType crossType = PMX; //OX
+    //KONFIGURACJA
+    CrossoverType crossType = PMX; //OX PMX
     string algorithmName = "Genetic_PMX"; 
 
     for(const auto& entry : fs::directory_iterator("data/")){
         vector<pair<double, double>> coordinates;
         readFile(entry, coordinates);
         if(coordinates.empty()) continue;
-        if(entry.path() == "data/ca4663.tsp") continue; 
-        if(entry.path() == "data/eg7146.tsp") continue; 
-        if(entry.path() == "data/ei8246.tsp") continue; 
-        if(entry.path() == "data/tz6117.tsp") continue; 
-        if(entry.path() == "data/mu1979.tsp") continue; 
+        if(entry.path() != "data/ca4663.tsp") continue; 
+        //if(entry.path() != "data/eg7146.tsp" && entry.path() != "data/ei8246.tsp" && entry.path() != "data/tz6117.tsp" && entry.path() != "data/ca4663.tsp") continue; 
+        //if(entry.path() != "data/mu1979.tsp") continue; 
+        // if(entry.path() == "data/eg7146.tsp") continue; 
+        // if(entry.path() == "data/ei8246.tsp") continue; 
+        // if(entry.path() == "data/tz6117.tsp") continue; 
+        // if(entry.path() == "data/mu1979.tsp") continue; 
         
         int n = coordinates.size();
         vector<int> dist = createDistanceMatrix(coordinates);
@@ -45,22 +46,21 @@ int main(){
         long long bestCost = LLONG_MAX;
         vector<int> bestPerm(n);
 
-        // Ustalenie liczby uruchomień zgodnie z wymaganiami (podstawa: 100)
-        int no_runs = 100;
+        // Ustalenie liczby uruchomień  (podstawa = 100)
+        int no_runs = 1;
 
         // Bezpiecznik czasowy dla potężnych plików (algorytm memetyczny jest kosztowny)
         if(entry.path().filename() == "eg7146.tsp" || 
            entry.path().filename() == "tz6117.tsp" || 
            entry.path().filename() == "ei8246.tsp") {
-            no_runs = 5; // Zmniejszamy liczbę prób dla potworów grafowych, by program skończył się w skończonym czasie
+            no_runs = 5; 
         }
 
         cout << "==================================================\n";
         cout << "File: " << entry.path().filename() << " (Vertices: " << n << ")\n";
         cout << "Running " << algorithmName << " with " << no_runs << " iterations...\n";
 
-        // Główna pętla eksperymentu - działa sekwencyjnie, 
-        // ponieważ runIslandGeneticAlgorithm wewnętrznie rozpędza 8 wątków OpenMP.
+        // Główna pętla eksperymentu - sekwencyjnie, ponieważ runIslandGeneticAlgorithm wewnętrznie rozpędza 8 wątków OpenMP.
         for (int i = 0; i < no_runs; ++i) {
             auto startTime = chrono::high_resolution_clock::now();
             
@@ -90,8 +90,8 @@ int main(){
         cout << "  Average Cost: " << avgCost << "\n";
         cout << "  Best Cost:    " << bestCost << "\n";
 
-        // Zapis najlepszego rozwiązania do pliku .sol (zgodnie z Twoim formatem)
-        fs::create_directories("dataSol"); // Upewniamy się, że folder istnieje
+        // Zapis najlepszego rozwiązania do pliku .sol
+        fs::create_directories("dataSol"); 
         string solFilename = "dataSol/" + entry.path().stem().string() + algorithmName + ".sol";
         ofstream solFile(solFilename);
         if(solFile.is_open()){

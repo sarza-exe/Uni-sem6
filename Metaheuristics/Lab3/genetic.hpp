@@ -23,7 +23,7 @@ struct Individual {
 enum CrossoverType { OX, PMX };
 
 
-// --- Implementacja Selekcji Turniejowej ---
+// Implementacja Selekcji Turniejowej
 int tournamentSelection(const vector<Individual>& population, int tournamentSize, mt19937& rng) {
     uniform_int_distribution<int> dist(0, population.size() - 1);
     int bestIdx = dist(rng);
@@ -37,7 +37,7 @@ int tournamentSelection(const vector<Individual>& population, int tournamentSize
     return bestIdx;
 }
 
-// --- Implementacja Krzyżowania OX (Order Crossover) ---
+// Implementacja Krzyżowania OX (Order Crossover)
 Individual crossoverOX(const Individual& p1, const Individual& p2, mt19937& rng) {
     int n = p1.tour.size();
     uniform_int_distribution<int> dist(0, n - 1);
@@ -69,7 +69,7 @@ Individual crossoverOX(const Individual& p1, const Individual& p2, mt19937& rng)
     return child;
 }
 
-// --- Implementacja Krzyżowania PMX (Partially Mapped Crossover) ---
+// Implementacja Krzyżowania PMX (Partially Mapped Crossover)
 Individual crossoverPMX(const Individual& p1, const Individual& p2, mt19937& rng) {
     int n = p1.tour.size();
     uniform_int_distribution<int> dist(0, n - 1);
@@ -124,7 +124,7 @@ Individual crossoverPMX(const Individual& p1, const Individual& p2, mt19937& rng
     return child;
 }
 
-// --- Implementacja Mutacji przez Odwrócenie (Invert) ---
+// Implementacja Mutacji przez Odwrócenie (Invert)
 void mutateInvert(Individual& ind, double mutationRate, mt19937& rng) {
     uniform_real_distribution<double> rdist(0.0, 1.0);
     if (rdist(rng) < mutationRate) {
@@ -139,7 +139,7 @@ void mutateInvert(Individual& ind, double mutationRate, mt19937& rng) {
     }
 }
 
-// --- Migracja między wyspami (Sekwencyjna) ---
+// Migracja między wyspami (Sekwencyjna)
 void executeMigration(vector<vector<Individual>>& islands) {
     int numIslands = islands.size();
     vector<vector<Individual>> migrants(numIslands);
@@ -169,14 +169,14 @@ void executeMigration(vector<vector<Individual>>& islands) {
     }
 }
 
-// --- GŁÓWNY ALGORYTM GENETYCZNY (ZOPTYMALIZOWANY POD KĄTEM CZASU) ---
+// GŁÓWNY ALGORYTM GENETYCZNY
 Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, CrossoverType crossType) {
     const int NUM_ISLANDS = 8;
     const int POP_SIZE = 100;
     const int TOURNAMENT_SIZE = 5;
     const double MUTATION_RATE = 0.05; 
     
-    // --- NOWE PARAMETRY PRZYSPIESZAJĄCE ---
+    // PARAMETRY PRZYSPIESZAJĄCE
     const double LS_PROBABILITY = 0.10;      // Tylko 10% dzieci przechodzi Local Search!
     const int STAGNATION_LIMIT = 150;        // 150 pokoleń bez poprawy wystarczy
     
@@ -185,8 +185,7 @@ Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, Cross
     random_device rd;
     for (int i = 0; i < NUM_ISLANDS; ++i) rngs[i].seed(rd() + i);
 
-    // Inicjalizacja populacji początkowej - tutaj warto dać full Local Search, 
-    // żeby wyspy startowały z wysokiego poziomu
+    // Inicjalizacja populacji początkowej - tutaj warto dać full Local Search, żeby wyspy startowały z wysokiego poziomu
     for (int i = 0; i < NUM_ISLANDS; ++i) {
         for (int j = 0; j < POP_SIZE; ++j) {
             islands[i][j].tour = randomPermutation(n);
@@ -218,6 +217,11 @@ Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, Cross
                 while (nextGeneration.size() < POP_SIZE) {
                     int p1Idx = tournamentSelection(islands[islandId], TOURNAMENT_SIZE, rng);
                     int p2Idx = tournamentSelection(islands[islandId], TOURNAMENT_SIZE, rng);
+
+                    // powinno się zagwarantować, aby wybrano dwóch różnych rodziców, w celu uniknięcia tworzenia duplikatów
+                    while( p1Idx == p2Idx){
+                        p2Idx = tournamentSelection(islands[islandId], TOURNAMENT_SIZE, rng);
+                    }
                     
                     Individual child;
                     if (crossType == OX) {
@@ -228,7 +232,7 @@ Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, Cross
 
                     mutateInvert(child, MUTATION_RATE, rng);
 
-                    // [MEMETYKA ZOPTYMALIZOWANA] LS odpala się losowo, a nie dla każdego!
+                    // memtyka zoptymalizowana,  LS odpala się losowo, a nie dla każdego!
                     if (lsidist(rng) < LS_PROBABILITY) {
                         child.cost = localSearch(distMatrix, child.tour, 10);
                     } else {
@@ -244,8 +248,7 @@ Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, Cross
         // Kontrola rekordów
         for (int i = 0; i < NUM_ISLANDS; ++i) {
             for (int j = 0; j < POP_SIZE; ++j) {
-                // Dla pewności, jeśli najlepszy osobnik nie miał robionego LS, 
-                // a otarł się o rekord, możemy go "dokształcić" na koniec bloku
+                // Dla pewności, jeśli najlepszy osobnik nie miał robionego LS, a otarł się o rekord, możemy go "dokształcić" na koniec bloku
                 if (islands[i][j].cost < globalBestCost) {
                     localSearch(distMatrix, islands[i][j].tour, 20);
                     islands[i][j].cost = calculateCost(distMatrix, islands[i][j].tour);
