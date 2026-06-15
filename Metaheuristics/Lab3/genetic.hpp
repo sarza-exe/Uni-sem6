@@ -13,17 +13,16 @@
 
 using namespace std;
 
-// Struktura reprezentująca osobnika w populacji
+// struktura pojedynczego wspinacza (osobnika) - trzyma jego trase i jej dlugosc (koszt)
 struct Individual {
     vector<int> tour;
     long long cost;
 };
 
-// Typ wyliczeniowy do wyboru metody krzyżowania (w celu porównania do sprawozdania)
+// typ wyliczeniowy by w mainie latwo wybierac miedzy ox a pmx
 enum CrossoverType { OX, PMX };
 
-
-// Implementacja Selekcji Turniejowej
+// selekcja turniejowa - losuje kilku wspinaczy i wygrywa ten z najkrotsza trasa (zostaje rodzicem)
 int tournamentSelection(const vector<Individual>& population, int tournamentSize, mt19937& rng) {
     uniform_int_distribution<int> dist(0, population.size() - 1);
     int bestIdx = dist(rng);
@@ -37,7 +36,7 @@ int tournamentSelection(const vector<Individual>& population, int tournamentSize
     return bestIdx;
 }
 
-// Implementacja Krzyżowania OX (Order Crossover)
+// krzyzowanie ox - kopiuje srodek z pierwszego rodzica, a reszte uzupelnia po kolei z drugiego
 Individual crossoverOX(const Individual& p1, const Individual& p2, mt19937& rng) {
     int n = p1.tour.size();
     uniform_int_distribution<int> dist(0, n - 1);
@@ -49,13 +48,11 @@ Individual crossoverOX(const Individual& p1, const Individual& p2, mt19937& rng)
     child.tour.assign(n, -1);
     vector<bool> inside(n, false);
 
-    // Kopiowanie fragmentu od pierwszego rodzica
     for (int i = idx1; i <= idx2; ++i) {
         child.tour[i] = p1.tour[i];
         inside[p1.tour[i]] = true;
     }
 
-    // Uzupełnianie reszty z drugiego rodzica (z zachowaniem kolejności i wrap-around)
     int childIdx = (idx2 + 1) % n;
     int parentIdx = (idx2 + 1) % n;
 
@@ -69,7 +66,7 @@ Individual crossoverOX(const Individual& p1, const Individual& p2, mt19937& rng)
     return child;
 }
 
-// Implementacja Krzyżowania PMX (Partially Mapped Crossover)
+// krzyzowanie pmx - bardziej skomplikowane, kopiuje srodek od pierwszego i uzywa mapowania by wstawic geny drugiego
 Individual crossoverPMX(const Individual& p1, const Individual& p2, mt19937& rng) {
     int n = p1.tour.size();
     uniform_int_distribution<int> dist(0, n - 1);
@@ -85,12 +82,10 @@ Individual crossoverPMX(const Individual& p1, const Individual& p2, mt19937& rng
         posInP2[p2.tour[i]] = i;
     }
 
-    // Kopiowanie segmentu z P1
     for (int i = idx1; i <= idx2; ++i) {
         child.tour[i] = p1.tour[i];
     }
 
-    // Mapowanie elementów z P2
     for (int i = idx1; i <= idx2; ++i) {
         int candidate = p2.tour[i];
         bool alreadyPresent = false;
@@ -115,7 +110,6 @@ Individual crossoverPMX(const Individual& p1, const Individual& p2, mt19937& rng
         }
     }
 
-    // Przepisanie reszty elementów bezpośrednio z P2
     for (int i = 0; i < n; ++i) {
         if (child.tour[i] == -1) {
             child.tour[i] = p2.tour[i];
@@ -124,7 +118,7 @@ Individual crossoverPMX(const Individual& p1, const Individual& p2, mt19937& rng
     return child;
 }
 
-// Implementacja Mutacji przez Odwrócenie (Invert)
+// mutacja - 5% szans ze u dziecka odwrocimy kawalek trasy (to samo co jeden ruch 2-opt)
 void mutateInvert(Individual& ind, double mutationRate, mt19937& rng) {
     uniform_real_distribution<double> rdist(0.0, 1.0);
     if (rdist(rng) < mutationRate) {
@@ -139,12 +133,12 @@ void mutateInvert(Individual& ind, double mutationRate, mt19937& rng) {
     }
 }
 
-// Migracja między wyspami (Sekwencyjna)
+// migracja - wyspy wymieniaja sie wiedza, 5 najlepszych wspinaczy plynnie na nastepna wyspe
 void executeMigration(vector<vector<Individual>>& islands) {
     int numIslands = islands.size();
     vector<vector<Individual>> migrants(numIslands);
 
-    // 1. Pobierz 5 najlepszych z każdej wyspy
+    // najpierw zbieramy po 5 najlepszych z kazdej wyspy
     for (int i = 0; i < numIslands; ++i) {
         sort(islands[i].begin(), islands[i].end(), [](const Individual& a, const Individual& b) {
             return a.cost < b.cost;
@@ -154,11 +148,10 @@ void executeMigration(vector<vector<Individual>>& islands) {
         }
     }
 
-    // 2. Prześlij na następną wyspę zastępując 5 najgorszych osobników
+    // potem wrzucamy ich na sasiadujaca wyspe na miejsce 5 najslabszych (bo posortowalismy malejaco)
     for (int i = 0; i < numIslands; ++i) {
         int nextIsland = (i + 1) % numIslands;
         
-        // Sortujemy wyspę docelową tak, aby najgorsi byli na początku (malejąco po koszcie)
         sort(islands[nextIsland].begin(), islands[nextIsland].end(), [](const Individual& a, const Individual& b) {
             return a.cost > b.cost;
         });
@@ -169,27 +162,30 @@ void executeMigration(vector<vector<Individual>>& islands) {
     }
 }
 
-// GŁÓWNY ALGORYTM GENETYCZNY
+// glowna petla algorytmu ewolucyjnego
 Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, CrossoverType crossType) {
     const int NUM_ISLANDS = 8;
-    const int POP_SIZE = 100;
+    const int POP_SIZE = 20;
     const int TOURNAMENT_SIZE = 5;
     const double MUTATION_RATE = 0.05; 
     
-    // PARAMETRY PRZYSPIESZAJĄCE
-    const double LS_PROBABILITY = 0.10;      // Tylko 10% dzieci przechodzi Local Search!
-    const int STAGNATION_LIMIT = 150;        // 150 pokoleń bez poprawy wystarczy
+    // tu ustawiamy szanse na wejscie local searcha i limit czasu dzialania
+    const double LS_PROBABILITY = 0.10;
+    const int STAGNATION_LIMIT = 10; 
+    const int NO_EPOCHS = 50; // liczba pokolen na wyspie zanim nastapi migracja
     
     vector<vector<Individual>> islands(NUM_ISLANDS, vector<Individual>(POP_SIZE));
+    
+    // kazda wyspa ma wlasny generator losowy zeby watki nie wchodzily sobie w droge
     vector<mt19937> rngs(NUM_ISLANDS);
     random_device rd;
     for (int i = 0; i < NUM_ISLANDS; ++i) rngs[i].seed(rd() + i);
 
-    // Inicjalizacja populacji początkowej - tutaj warto dać full Local Search, żeby wyspy startowały z wysokiego poziomu
+    // tworzenie 100 wspinaczy na kazdej z 8 wysp i wyslanie ich od razu na trening (local search)
     for (int i = 0; i < NUM_ISLANDS; ++i) {
         for (int j = 0; j < POP_SIZE; ++j) {
             islands[i][j].tour = randomPermutation(n);
-            islands[i][j].cost = localSearch(distMatrix, islands[i][j].tour, 10); // Start z lokalnego optimum
+            islands[i][j].cost = localSearch(distMatrix, islands[i][j].tour, 10);
         }
     }
 
@@ -199,30 +195,37 @@ Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, Cross
     
     uniform_real_distribution<double> lsidist(0.0, 1.0);
 
+    // petla kreci sie dopoki wspinacze bija rekordy
     while (generationsWithoutImprovement < STAGNATION_LIMIT) {
         bool localImprovementFound = false;
 
+        // od teraz kazda z 8 wysp liczy sie na osobnym rdzeniu procesora
         #pragma omp parallel for num_threads(NUM_ISLANDS) shared(islands, rngs)
         for (int islandId = 0; islandId < NUM_ISLANDS; ++islandId) {
             auto& rng = rngs[islandId];
             
-            for (int epoch = 0; epoch < 50; ++epoch) {
+            // ewolucja toczy sie przez 50 pokolen zanim wyspy sie ze soba skontaktuja
+            for (int epoch = 0; epoch < NO_EPOCHS; ++epoch) {
                 vector<Individual> nextGeneration;
                 nextGeneration.reserve(POP_SIZE);
                 
+                // elitaryzm - przepisywanie najlepszego starca do nowej populacji by nie stracic rekordu
                 auto bestOnIsland = min_element(islands[islandId].begin(), islands[islandId].end(), 
                     [](const Individual& a, const Individual& b) { return a.cost < b.cost; });
                 nextGeneration.push_back(*bestOnIsland);
 
+                // wypelnianie wyspy nowymi dziecmi
                 while (nextGeneration.size() < POP_SIZE) {
+                    // wybieramy matke i ojca
                     int p1Idx = tournamentSelection(islands[islandId], TOURNAMENT_SIZE, rng);
                     int p2Idx = tournamentSelection(islands[islandId], TOURNAMENT_SIZE, rng);
 
-                    // powinno się zagwarantować, aby wybrano dwóch różnych rodziców, w celu uniknięcia tworzenia duplikatów
+                    // pilnujemy by wspinacz nie skrzyzowal sie sam ze soba
                     while( p1Idx == p2Idx){
                         p2Idx = tournamentSelection(islands[islandId], TOURNAMENT_SIZE, rng);
                     }
                     
+                    // krzyzowanie zalezne od wybranego parametru
                     Individual child;
                     if (crossType == OX) {
                         child = crossoverOX(islands[islandId][p1Idx], islands[islandId][p2Idx], rng);
@@ -230,13 +233,14 @@ Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, Cross
                         child = crossoverPMX(islands[islandId][p1Idx], islands[islandId][p2Idx], rng);
                     }
 
+                    // drobna mutacja
                     mutateInvert(child, MUTATION_RATE, rng);
 
-                    // memtyka zoptymalizowana,  LS odpala się losowo, a nie dla każdego!
+                    // algorytm memetyczny - co dziesiate dziecko uczy sie (idzie na local search)
                     if (lsidist(rng) < LS_PROBABILITY) {
                         child.cost = localSearch(distMatrix, child.tour, 10);
                     } else {
-                        child.cost = calculateCost(distMatrix, child.tour); // Zwykłe szybkie liczenie kosztu
+                        child.cost = calculateCost(distMatrix, child.tour); // reszta dzieci ma tylko liczony koszt
                     }
 
                     nextGeneration.push_back(child);
@@ -245,10 +249,11 @@ Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, Cross
             }
         }
 
-        // Kontrola rekordów
+        // po 50 epokach szukamy czy na jakiejs wyspie padl nowy rekord swiata
         for (int i = 0; i < NUM_ISLANDS; ++i) {
             for (int j = 0; j < POP_SIZE; ++j) {
-                // Dla pewności, jeśli najlepszy osobnik nie miał robionego LS, a otarł się o rekord, możemy go "dokształcić" na koniec bloku
+                
+                // jesli ktos jest blisko rekordu a nie mial treningu to dajemy mu szanse
                 if (islands[i][j].cost < globalBestCost) {
                     localSearch(distMatrix, islands[i][j].tour, 20);
                     islands[i][j].cost = calculateCost(distMatrix, islands[i][j].tour);
@@ -262,12 +267,14 @@ Individual runIslandGeneticAlgorithm(const vector<int>& distMatrix, int n, Cross
             }
         }
 
+        // aktualizacja licznika stagnacji by wiedziec kiedy przerwac program
         if (localImprovementFound) {
             generationsWithoutImprovement = 0;
         } else {
             generationsWithoutImprovement += 50;
         }
 
+        // jesli jeszcze nie konczymy to odpalamy migracje by wyspy wymieszaly geny
         if (generationsWithoutImprovement < STAGNATION_LIMIT) {
             executeMigration(islands);
         }

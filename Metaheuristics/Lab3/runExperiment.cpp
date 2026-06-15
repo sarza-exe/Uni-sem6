@@ -47,7 +47,7 @@ int main(){
         vector<int> bestPerm(n);
 
         // Ustalenie liczby uruchomień  (podstawa = 100)
-        int no_runs = 1;
+        int no_runs = 8;
 
         // Bezpiecznik czasowy dla potężnych plików (algorytm memetyczny jest kosztowny)
         if(entry.path().filename() == "eg7146.tsp" || 
