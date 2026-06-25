@@ -37,6 +37,7 @@ int tournamentSelection(const vector<Individual>& population, int tournamentSize
 }
 
 // krzyzowanie ox - kopiuje srodek z pierwszego rodzica, a reszte uzupelnia po kolei z drugiego
+// liczy się które miasto z którym jest połączone
 Individual crossoverOX(const Individual& p1, const Individual& p2, mt19937& rng) {
     int n = p1.tour.size();
     uniform_int_distribution<int> dist(0, n - 1);
@@ -67,6 +68,7 @@ Individual crossoverOX(const Individual& p1, const Individual& p2, mt19937& rng)
 }
 
 // krzyzowanie pmx - bardziej skomplikowane, kopiuje srodek od pierwszego i uzywa mapowania by wstawic geny drugiego
+// liczy się które miasto ma jaki indeks 
 Individual crossoverPMX(const Individual& p1, const Individual& p2, mt19937& rng) {
     int n = p1.tour.size();
     uniform_int_distribution<int> dist(0, n - 1);
